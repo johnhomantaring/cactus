@@ -21,7 +21,7 @@ const main = async () => {
       console.log(`Written generated config to: ${config.configFile}`);
     } else {
       console.log(
-        `You opted to not overwrite the previous configuration file at ${config.configFile}, skipping...`,
+        `You opted to not overwrite the previous configuration file at ${config.configFile}, skipping...s`,
       );
     }
   } else {
