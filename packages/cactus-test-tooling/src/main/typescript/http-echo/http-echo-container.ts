@@ -216,7 +216,7 @@ export class HttpEchoContainer implements ITestLedger {
         } else {
           docker.modem.followProgress(
             stream,
-            (progressError: any, output: any[]) => {
+            (progressError: unknown, output: unknown[]) => {
               if (progressError) {
                 reject(progressError);
               } else {
