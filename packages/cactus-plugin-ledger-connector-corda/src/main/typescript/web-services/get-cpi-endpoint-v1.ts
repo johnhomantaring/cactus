@@ -1,13 +1,4 @@
 import { Express, Request, Response } from "express";
-
-import {
-  Logger,
-  LoggerProvider,
-  LogLevelDesc,
-  Checks,
-  IAsyncProvider,
-} from "@hyperledger/cactus-common";
-
 import {
   IWebServiceEndpoint,
   IExpressRequestHandler,
@@ -15,43 +6,45 @@ import {
   Configuration,
 } from "@hyperledger/cactus-core-api";
 
-import OAS from "../../json/openapi.json";
-
 import { registerWebServiceEndpoint } from "@hyperledger/cactus-core";
+
+import {
+  Checks,
+  IAsyncProvider,
+  Logger,
+  LoggerProvider,
+  LogLevelDesc,
+} from "@hyperledger/cactus-common";
+
 import {
   DefaultApi,
-  ListFlowsV1Request,
-  ListFlowsV1Response,
+  CPIV5Response,
 } from "../generated/openapi/typescript-axios";
 
-import {
-  PluginLedgerConnectorCorda,
-  CordaVersion,
-} from "../plugin-ledger-connector-corda";
-export interface IListFlowsEndpointV1Options {
+import OAS from "../../json/openapi.json";
+import https from "https";
+export interface IListCPIEndpointV1Options {
   logLevel?: LogLevelDesc;
   apiUrl?: string;
-  cordaVersion?: CordaVersion;
-  connector?: PluginLedgerConnectorCorda;
 }
 
-export class ListFlowsEndpointV1 implements IWebServiceEndpoint {
-  public static readonly CLASS_NAME = "ListFlowsEndpointV1";
+export class ListCPIEndpointV1 implements IWebServiceEndpoint {
+  public static readonly CLASS_NAME = "ListCPIEndpointV1";
 
   private readonly log: Logger;
   private readonly apiUrl?: string;
 
   public get className(): string {
-    return ListFlowsEndpointV1.CLASS_NAME;
+    return ListCPIEndpointV1.CLASS_NAME;
   }
 
-  constructor(public readonly options: IListFlowsEndpointV1Options) {
+  constructor(public readonly options: IListCPIEndpointV1Options) {
     const fnTag = `${this.className}#constructor()`;
 
     Checks.truthy(options, `${fnTag} options`);
 
     this.log = LoggerProvider.getOrCreate({
-      label: "list-flows-endpoint-v1",
+      label: "list-cpi-endpoint-v1",
       level: options.logLevel || "INFO",
     });
 
@@ -59,35 +52,39 @@ export class ListFlowsEndpointV1 implements IWebServiceEndpoint {
   }
 
   getAuthorizationOptionsProvider(): IAsyncProvider<IEndpointAuthzOptions> {
-    // TODO: make this an injectable dependency in the constructor
     return {
       get: async () => ({
         isProtected: true,
         requiredRoles: [],
+        httpsAgent: new https.Agent({ rejectUnauthorized: false }),
       }),
     };
   }
 
-  public getExpressRequestHandler(): IExpressRequestHandler {
-    return this.handleRequest.bind(this);
-  }
-
-  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/list-flows"] {
+  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/cpi"] {
     return OAS.paths[
-      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/list-flows"
+      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/cpi"
     ];
   }
 
+  /**
+   * Returns the endpoint path to be used when installing the endpoint into the
+   * API server of Cactus.
+   */
   public getPath(): string {
-    return this.oasPath.post["x-hyperledger-cacti"].http.path;
+    return this.oasPath.get["x-hyperledger-cactus"].https.path;
   }
 
   public getVerbLowerCase(): string {
-    return this.oasPath.post["x-hyperledger-cacti"].http.verbLowerCase;
+    return this.oasPath.get["x-hyperledger-cactus"].https.verbLowerCase;
   }
 
   public getOperationId(): string {
-    return this.oasPath.post.operationId;
+    return this.oasPath.get.operationId;
+  }
+
+  public getExpressRequestHandler(): IExpressRequestHandler {
+    return this.handleRequest.bind(this);
   }
 
   public async registerExpress(
@@ -98,14 +95,15 @@ export class ListFlowsEndpointV1 implements IWebServiceEndpoint {
   }
 
   async handleRequest(req: Request, res: Response): Promise<void> {
-    const fnTag = "ListFlowsEndpointV1#handleRequest()";
+    const fnTag = "GetCPIResponseV1#constructor()";
     const verbUpper = this.getVerbLowerCase().toUpperCase();
     this.log.debug(`${verbUpper} ${this.getPath()}`);
+
     try {
       if (this.apiUrl === undefined) throw "apiUrl option is necessary";
-      const resBody = await this.callInternalContainer(req.body);
+      const body = await this.callInternalContainer(req.body);
       res.status(200);
-      res.send(resBody);
+      res.json(body);
     } catch (ex) {
       this.log.error(`${fnTag} failed to serve request`, ex);
       res.status(500);
@@ -114,12 +112,10 @@ export class ListFlowsEndpointV1 implements IWebServiceEndpoint {
     }
   }
 
-  async callInternalContainer(
-    req: ListFlowsV1Request,
-  ): Promise<ListFlowsV1Response> {
+  async callInternalContainer(req: any): Promise<CPIV5Response> {
     const apiConfig = new Configuration({ basePath: this.apiUrl });
     const apiClient = new DefaultApi(apiConfig);
-    const res = await apiClient.listFlowsV1(req);
+    const res = await apiClient.getCPIResponse(req);
     return res.data;
   }
 }
