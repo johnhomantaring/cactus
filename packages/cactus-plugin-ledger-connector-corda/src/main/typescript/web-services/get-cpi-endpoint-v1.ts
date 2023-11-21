@@ -1,5 +1,4 @@
 import { Express, Request, Response } from "express";
-import { Server as SecureServer } from "https";
 import {
   IWebServiceEndpoint,
   IExpressRequestHandler,
@@ -34,8 +33,6 @@ export class ListCPIEndpointV1 implements IWebServiceEndpoint {
 
   private readonly log: Logger;
   private readonly apiUrl?: string;
-  //private readonly authorizationOptionsProvider: AuthorizationOptionsProvider;
-  //private readonly apiUrl?: string;
 
   public get className(): string {
     return ListCPIEndpointV1.CLASS_NAME;
@@ -64,7 +61,7 @@ export class ListCPIEndpointV1 implements IWebServiceEndpoint {
     };
   }
 
-  public get oasPath(): typeof OAS.paths["/api/v1/cpi"] {
+  public get oasPath(): (typeof OAS.paths)["/api/v1/cpi"] {
     return OAS.paths["/api/v1/cpi"];
   }
 
