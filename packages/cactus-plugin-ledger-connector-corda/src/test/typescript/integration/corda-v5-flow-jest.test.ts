@@ -152,20 +152,13 @@ describe("Corda Setup", () => {
       );
       expect(startflow).toBeTruthy();
 
-      // await waitProcess(5);
-      // await waitForStatusChange(shortHashCharlie, "test-1");
-      const testResponse = await pollEndpointWithApiClient(
+      const test1Response = await pollEndpointUntilCompleted(
         shortHashCharlie,
         "test-1",
       );
-      // const checkflow = await apiClient.flowStatusResponse(
-      //   shortHashCharlie,
-      //   "test-1",
-      // );
-      // expect(checkflow).toBeTruthy();
-      // expect(checkflow.data.flowStatus).toBe("COMPLETED");
-      // expect(checkflow.data.flowError).toBe(null);
+      expect(test1Response).toBeTruthy();
     });
+
     it("Simulate conversation between Alice and Bob", async () => {
       //1. Alice creates a new chat
       const aliceCreateChat = {
@@ -183,15 +176,12 @@ describe("Corda Setup", () => {
         aliceCreateChat,
       );
       expect(startflowChat).toBeTruthy();
-      // // await waitProcess(5);
-      let test1 = await pollEndpointWithApiClient(shortHashAlice, "create-1");
-      // console.log("check stop");
-      // const checkflow = await apiClient.flowStatusResponse(
-      //   shortHashAlice,
-      //   "create-1",
-      // );
-      expect(test1).toBeTruthy();
-      // await waitForStatusChange(shortHashAlice, "create-1");
+      const aliceCreateResponse = await pollEndpointUntilCompleted(
+        shortHashAlice,
+        "create-1",
+      );
+      expect(aliceCreateResponse).toBeTruthy();
+
       //2. Bob lists his chats
       const bobListChats = {
         clientRequestId: "list-1",
@@ -204,10 +194,8 @@ describe("Corda Setup", () => {
         bobListChats,
       );
       expect(startflowChat).toBeTruthy();
-      // await waitProcess(10);
-      // const flowData = await waitForStatusChange(shortHashBob, "list-1");
-      // uncomment si 206 later
-      const flowData = await pollEndpointWithApiClient(shortHashBob, "list-1");
+      const flowData = await pollEndpointUntilCompleted(shortHashBob, "list-1");
+      expect(flowData).toBeTruthy();
       const flowResult =
         flowData !== null && flowData !== undefined
           ? flowData.flowResult
@@ -233,126 +221,147 @@ describe("Corda Setup", () => {
           message: "Hi Alice",
         },
       };
-      const bobUpdate1Response = await apiClient.startFlowParameters(
+      await apiClient.startFlowParameters(shortHashBob, bobUpdate1);
+      const bobUpdate1Response = await pollEndpointUntilCompleted(
         shortHashBob,
-        bobUpdate1,
+        "update-1",
       );
-      // await waitProcess(5);
-      await pollEndpointWithApiClient(shortHashBob, "update-1");
-      // const bobUpdate2 = {
-      //   clientRequestId: "update-2",
-      //   flowClassName:
-      //     "com.r3.developers.csdetemplate.utxoexample.workflows.UpdateChatFlow",
-      //   requestBody: {
-      //     id: chatWithBobId,
-      //     message: "How are you today?",
-      //   },
-      // };
-      // await apiClient.startFlowParameters(shortHashBob, bobUpdate2);
-      // await waitProcess(5);
-      // await waitForStatusChange(shortHashBob, "update-2");
+      expect(bobUpdate1Response).toBeTruthy();
 
-      // //4. Alice lists chat
-      // const aliceListsChat = {
-      //   clientRequestId: "list-2",
-      //   flowClassName:
-      //     "com.r3.developers.csdetemplate.utxoexample.workflows.ListChatsFlow",
-      //   requestBody: {},
-      // };
-      // await apiClient.startFlowParameters(shortHashAlice, aliceListsChat);
-      // await waitProcess(5);
-      // await waitForStatusChange(shortHashAlice, "list-2");
+      const bobUpdate2 = {
+        clientRequestId: "update-2",
+        flowClassName:
+          "com.r3.developers.csdetemplate.utxoexample.workflows.UpdateChatFlow",
+        requestBody: {
+          id: chatWithBobId,
+          message: "How are you today?",
+        },
+      };
+      await apiClient.startFlowParameters(shortHashBob, bobUpdate2);
 
-      // //5. Alice checks the history of the chat with Bob
-      // const aliceHistoryRequest = {
-      //   clientRequestId: "get-1",
-      //   flowClassName:
-      //     "com.r3.developers.csdetemplate.utxoexample.workflows.GetChatFlow",
-      //   requestBody: {
-      //     id: chatWithBobId,
-      //     numberOfRecords: "4",
-      //   },
-      // };
-      // await apiClient.startFlowParameters(shortHashAlice, aliceHistoryRequest);
-      // await waitProcess(5);
-      // await waitForStatusChange(shortHashAlice, "get-1");
+      const bobUpdate2Response = await pollEndpointUntilCompleted(
+        shortHashBob,
+        "update-2",
+      );
+      expect(bobUpdate2Response).toBeTruthy();
 
-      // //6. Alice replies to Bob
-      // const aliceReply = {
-      //   clientRequestId: "update-4",
-      //   flowClassName:
-      //     "com.r3.developers.csdetemplate.utxoexample.workflows.UpdateChatFlow",
-      //   requestBody: {
-      //     id: chatWithBobId,
-      //     message: "I am very well thank you",
-      //   },
-      // };
-      // await apiClient.startFlowParameters(shortHashAlice, aliceReply);
-      // await waitProcess(5);
-      // await waitForStatusChange(shortHashAlice, "update-4");
+      //4. Alice lists chat
+      const aliceListsChat = {
+        clientRequestId: "list-2",
+        flowClassName:
+          "com.r3.developers.csdetemplate.utxoexample.workflows.ListChatsFlow",
+        requestBody: {},
+      };
+      await apiClient.startFlowParameters(shortHashAlice, aliceListsChat);
+      const aliceList2Response = await pollEndpointUntilCompleted(
+        shortHashAlice,
+        "list-2",
+      );
+      expect(aliceList2Response).toBeTruthy();
 
-      // //7. Bob gets the chat history
-      // const bobHistoryRequest = {
-      //   clientRequestId: "get-2",
-      //   flowClassName:
-      //     "com.r3.developers.csdetemplate.utxoexample.workflows.GetChatFlow",
-      //   requestBody: {
-      //     id: chatWithBobId,
-      //     numberOfRecords: "2",
-      //   },
-      // };
-      // await apiClient.startFlowParameters(shortHashBob, bobHistoryRequest);
-      // await waitProcess(5);
-      // await waitForStatusChange(shortHashBob, "get-2");
+      //5. Alice checks the history of the chat with Bob
+      const aliceHistoryRequest = {
+        clientRequestId: "get-1",
+        flowClassName:
+          "com.r3.developers.csdetemplate.utxoexample.workflows.GetChatFlow",
+        requestBody: {
+          id: chatWithBobId,
+          numberOfRecords: "4",
+        },
+      };
+      await apiClient.startFlowParameters(shortHashAlice, aliceHistoryRequest);
+
+      const aliceHistoryResponse = await pollEndpointUntilCompleted(
+        shortHashAlice,
+        "get-1",
+      );
+      expect(aliceHistoryResponse).toBeTruthy();
+
+      //6. Alice replies to Bob
+      const aliceReply = {
+        clientRequestId: "update-4",
+        flowClassName:
+          "com.r3.developers.csdetemplate.utxoexample.workflows.UpdateChatFlow",
+        requestBody: {
+          id: chatWithBobId,
+          message: "I am very well thank you",
+        },
+      };
+
+      await apiClient.startFlowParameters(shortHashAlice, aliceReply);
+      const aliceReplyResponse = await pollEndpointUntilCompleted(
+        shortHashAlice,
+        "update-4",
+      );
+      expect(aliceReplyResponse).toBeTruthy();
+
+      //7. Bob gets the chat history
+      const bobHistoryRequest = {
+        clientRequestId: "get-2",
+        flowClassName:
+          "com.r3.developers.csdetemplate.utxoexample.workflows.GetChatFlow",
+        requestBody: {
+          id: chatWithBobId,
+          numberOfRecords: "2",
+        },
+      };
+      await apiClient.startFlowParameters(shortHashBob, bobHistoryRequest);
+
+      const bobHistoryResponse = await pollEndpointUntilCompleted(
+        shortHashBob,
+        "get-2",
+      );
+      expect(bobHistoryResponse).toBeTruthy();
     });
-    // describe("Negative Testing", () => {
-    //   it("Invalid username and password", async () => {
-    //     const apiUrl = "https://127.0.0.1:8888";
-    //     const username = "invalidUsername";
-    //     const password = "invalidPassword";
-    //     const axiosConfig: AxiosRequestConfig = {
-    //       baseURL: apiUrl,
-    //       headers: {
-    //         Authorization: `Basic ${Buffer.from(
-    //           `${username}:${password}`,
-    //           "base64",
-    //         )}`,
-    //       },
-    //     };
-    //     const axiosInstance = axios.create(axiosConfig);
-    //     const apiClient = new DefaultApi(undefined, apiUrl, axiosInstance);
-    //     try {
-    //       await apiClient.getCPIResponse();
-    //       fail("Expected an error for unauthorized access but it succeeded.");
-    //     } catch (error) {
-    //       expect(error).toBeDefined();
-    //       // expect("Failed as expected for unauthorized access.");
-    //       expect(error.message).toContain("Invalid");
-    //     }
-    //   });
-    //   it("Negative Test, invalid flow class name", async () => {
-    //     const invalidFlowName = "nonExistentFlow";
-    //     const shortHash = shortHashBob;
-    //     const request = {
-    //       clientRequestId: "test-1",
-    //       flowClassName: invalidFlowName,
-    //       requestBody: {
-    //         chatName: "Test-1",
-    //         otherMember: "CN=Bob, OU=Test Dept, O=R3, L=London, C=GB",
-    //         message: "Testing",
-    //       },
-    //     };
-    //     try {
-    //       await apiClient.startFlowParameters(shortHash, request);
-    //       fail("Expected an error for unauthorized access but it succeeded.");
-    //     } catch (error) {
-    //       expect(error).toBeDefined();
-    //       expect(error.message).toContain("Request failed");
-    //     }
-    //   });
-    // });
+
+    describe("Negative Testing", () => {
+      it("Invalid username and password", async () => {
+        const apiUrl = "https://127.0.0.1:8888";
+        const username = "invalidUsername";
+        const password = "invalidPassword";
+        const axiosConfig: AxiosRequestConfig = {
+          baseURL: apiUrl,
+          headers: {
+            Authorization: `Basic ${Buffer.from(
+              `${username}:${password}`,
+              "base64",
+            )}`,
+          },
+        };
+        const axiosInstance = axios.create(axiosConfig);
+        const apiClient = new DefaultApi(undefined, apiUrl, axiosInstance);
+        try {
+          await apiClient.getCPIResponse();
+          fail("Expected an error for unauthorized access but it succeeded.");
+        } catch (error) {
+          expect(error).toBeDefined();
+          expect(error.message).toContain("Invalid");
+        }
+      });
+      it("Negative Test, invalid flow class name", async () => {
+        const invalidFlowName = "nonExistentFlow";
+        const shortHash = shortHashBob;
+        const request = {
+          clientRequestId: "test-1",
+          flowClassName: invalidFlowName,
+          requestBody: {
+            chatName: "Test-1",
+            otherMember: "CN=Bob, OU=Test Dept, O=R3, L=London, C=GB",
+            message: "Testing",
+          },
+        };
+        try {
+          await apiClient.startFlowParameters(shortHash, request);
+          fail("Expected an error for unauthorized access but it succeeded.");
+        } catch (error) {
+          expect(error).toBeDefined();
+          expect(error.message).toContain("Request failed");
+        }
+      });
+    });
   });
-  async function pollEndpointWithApiClient(
+
+  async function pollEndpointUntilCompleted(
     shortHash: string,
     chatName: string,
     interval = 5000,
@@ -370,21 +379,14 @@ describe("Corda Setup", () => {
             chatName,
           );
           if (response.status === 200) {
-            console.log("show response.status if statement " + response.status);
             if (response.data.flowStatus === "COMPLETED") {
-              console.log("show status " + response.data.flowStatus);
               resolve(response.data);
             } else {
-              console.log("show status " + response.data.flowStatus);
               setTimeout(poll, interval);
             }
           } else if (attempts < maxAttempts) {
-            console.log(
-              "show response.status else if statement " + response.status,
-            );
             setTimeout(poll, interval);
           } else {
-            console.log("show response.status else  " + response.status);
             reject(
               new Error(
                 `Max attempts (${maxAttempts}) reached. Unable to get status 200.`,
@@ -392,12 +394,9 @@ describe("Corda Setup", () => {
             );
           }
         } catch (error) {
-          console.log("catch error");
           setTimeout(poll, interval);
         }
       }
-
-      // Start polling
       poll();
     });
   }
