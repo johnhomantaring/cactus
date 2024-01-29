@@ -254,12 +254,6 @@ export class CordaV5TestLedger implements ITestLedger {
       throw new Error(`${fnTag} ${validationResult.error.annotate()}`);
     }
   }
-
-  //Code for connector ports
-  public async getRpcAPublicPort(): Promise<number> {
-    const aContainerInfo = await this.getContainerInfo();
-    return Containers.getPublicPort(this.rpcPortA, aContainerInfo);
-  }
 }
 
 export function extractShortHash(shortHashID: string, name: string) {

@@ -46,6 +46,44 @@ describe("Corda Setup", () => {
     await cordaV5TestLedger.stop();
     await cordaV5TestLedger.destroy();
   });
+  // // testing instantiating of corda connector
+  // it("Instantiate corda-connector", async () => {
+  //   const partyARpcPort = await cordaV5TestLedger.getRpcAPublicPort();
+  //   const internalIpOrUndefined = await internalIpV4();
+  //   const internalIp = internalIpOrUndefined as string;
+  //   const springAppConfig = {
+  //     logging: {
+  //       level: {
+  //         root: "INFO",
+  //         "org.hyperledger.cactus": "DEBUG",
+  //       },
+  //     },
+  //     cactus: {
+  //       corda: {
+  //         node: { host: internalIp },
+  //         // TODO: parse the gradle build files to extract the credentials?
+  //         rpc: { port: partyARpcPort, username: "user1", password: "password" },
+  //       },
+  //     },
+  //   };
+  //   const springApplicationJson = JSON.stringify(springAppConfig);
+  //   const envVarSpringAppJson = `SPRING_APPLICATION_JSON=${springApplicationJson}`;
+  //   const connector1 = new CordaConnectorContainer({
+  //     logLevel,
+  //     imageName: "cactuts/cccs",
+  //     imageVersion: "latest",
+  //     envVars: [envVarSpringAppJson],
+  //   });
+  //   const connectorContainer = await connector1.start();
+  //   console.log(connectorContainer);
+  //   test("start connector", async () => {
+  //     console.log("starting connector");
+  //     await connector1.stop();
+  //     await connector1.destroy();
+  //   });
+  // });
+
+ // end of test instantiating
   let connector: PluginLedgerConnectorCorda;
   it("Get sshConfig", async () => {
     const sshConfig = await cordaV5TestLedger.getSshConfig();
