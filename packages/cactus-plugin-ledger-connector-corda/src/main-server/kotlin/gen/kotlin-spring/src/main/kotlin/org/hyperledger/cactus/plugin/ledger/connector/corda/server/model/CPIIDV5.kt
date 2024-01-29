@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 import javax.validation.Valid
-import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 
@@ -21,15 +20,11 @@ import io.swagger.v3.oas.annotations.media.Schema
  */
 data class CPIIDV5(
 
-    @Schema(example = "string", required = true, description = "")
     @get:JsonProperty("name", required = true) val name: kotlin.String,
 
-    @Schema(example = "string", required = true, description = "")
     @get:JsonProperty("version", required = true) val version: kotlin.String,
 
-    @Schema(example = "string", description = "")
     @get:JsonProperty("signerSummaryHash") val signerSummaryHash: kotlin.String? = null
 ) {
 
 }
-

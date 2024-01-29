@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 import javax.validation.Valid
-import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 
@@ -26,28 +25,20 @@ import io.swagger.v3.oas.annotations.media.Schema
  */
 data class FlowStatusV5Response(
 
-    @Schema(example = "string", required = true, description = "")
     @get:JsonProperty("flowStatus", required = true) val flowStatus: kotlin.String,
 
-    @Schema(example = "string", required = true, description = "")
     @get:JsonProperty("holdingIDShortHash", required = true) val holdingIDShortHash: kotlin.String,
 
-    @Schema(example = "2022-06-24T10:15:30Z", required = true, description = "")
     @get:JsonProperty("timestamp", required = true) val timestamp: java.time.OffsetDateTime,
 
-    @Schema(example = "string", description = "")
     @get:JsonProperty("clientRequestId") val clientRequestId: kotlin.String? = null,
 
     @field:Valid
-    @Schema(example = "null", description = "")
     @get:JsonProperty("flowError") val flowError: FlowV5Error? = null,
 
-    @Schema(example = "string", description = "")
     @get:JsonProperty("flowId") val flowId: kotlin.String? = null,
 
-    @Schema(example = "string", description = "")
     @get:JsonProperty("flowResult") val flowResult: kotlin.String? = null
 ) {
 
 }
-

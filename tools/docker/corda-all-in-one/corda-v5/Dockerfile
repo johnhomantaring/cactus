@@ -18,22 +18,25 @@ RUN apk add --no-cache gnupg
 #----------------- INSTALLING CORDA CDSE PREREQUISITES --------------------
 #--------------------------------------------------------------------------
 
-# Installing Zulu11 JDK
+# Installing Zulu17 JDK
 RUN wget -P /etc/apk/keys/ \
 https://cdn.azul.com/public_keys/alpine-signing@azul.com-5d5dc44c.rsa.pub
 RUN echo "https://repos.azul.com/zulu/alpine" | tee -a /etc/apk/repositories
 RUN apk update
-RUN apk add --no-cache zulu11-jdk
+RUN apk add --no-cache zulu17-jdk
+
+# ENV JAVA_HOME /usr/lib/jvm/zulu17-ca
+# ENV PATH $PATH:$JAVA_HOME/bin
 
 # Installing Corda CLI
 RUN mkdir /platform-jars && \
     wget -O /platform-jars/binary.tar.gz \
-    https://download.corda.net/c5-release-pack/E0b6f4f8-8907-47ae-b3cd-7f25ff756c2f-5.0.0-GA/platform-jars-5.0.0.tar.gz
+    https://download.corda.net/c5-release-pack/f82c7008-3b72-48fb-8e25-5ca38a9483b1-5.1.0/platform-jars-5.1.0.tar.gz
 
 RUN cd /platform-jars/ && \
     tar -xvzf binary.tar.gz && \
-    cp net/corda/cli/deployment/corda-cli-installer/5.0.0.0/corda-cli-installer-5.0.0.0.zip . && \
-    unzip corda-cli-installer-5.0.0.0.zip -d corda-cli-installer && \
+    cp net/corda/cli/deployment/corda-cli-installer/5.1.0.0/corda-cli-installer-5.1.0.0.zip . && \
+    unzip corda-cli-installer-5.1.0.0.zip -d corda-cli-installer && \
     corda-cli-installer/./install.sh
 ENV PATH="$PATH:~/.corda/cli"
 
@@ -45,7 +48,11 @@ RUN apk add --no-cache git
 RUN git clone https://github.com/corda/CSDE-cordapp-template-kotlin.git
 
 RUN cd CSDE-cordapp-template-kotlin/ && \
-    git checkout release/corda-5-0
+    git checkout release/corda-5-0 && \
+    sed -i 's/cordaNotaryPluginsVersion=5.0.0.0/cordaNotaryPluginsVersion=5.0.1.0/' gradle.properties && \
+    sed -i 's/combinedWorkerJarVersion=5.0.0.0/combinedWorkerJarVersion=5.0.1.0/' gradle.properties && \
+    sed -i 's/import static org.gradle.api.JavaVersion.VERSION_11/import static org.gradle.api.JavaVersion.VERSION_17/' build.gradle && \
+    sed -i 's/def javaVersion = VERSION_11/def javaVersion = VERSION_17/' build.gradle
 
 RUN apk add --no-cache supervisor
 ## TO FIX: Exposing the required ports 5005, 5432 and 8888 for CSDE
@@ -61,6 +68,9 @@ COPY supervisord.conf /etc/supervisord.conf
 COPY start-services.sh /start-services.sh
 RUN chmod +x /start-services.sh
 
+COPY healthcheck.sh /healthcheck.sh
+RUN chmod +x /healthcheck.sh
+
 WORKDIR /CSDE-cordapp-template-kotlin/
 
 # Extend the parent image's entrypoint
@@ -68,4 +78,4 @@ WORKDIR /CSDE-cordapp-template-kotlin/
 ENTRYPOINT ["/usr/bin/supervisord"]
 CMD ["--configuration", "/etc/supervisord.conf", "--nodaemon"]
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=100s --retries=1000 CMD [ -f 5vNodeSetupdone.txt ]
+HEALTHCHECK --interval=30s --timeout=60s --start-period=100s --retries=100 CMD /healthcheck.sh

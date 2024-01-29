@@ -61,10 +61,8 @@ export class ListCPIEndpointV1 implements IWebServiceEndpoint {
     };
   }
 
-  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/cpi"] {
-    return OAS.paths[
-      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/cpi"
-    ];
+  public get oasPath(): (typeof OAS.paths)["/api/v1/cpi"] {
+    return OAS.paths["/api/v1/cpi"];
   }
 
   /**

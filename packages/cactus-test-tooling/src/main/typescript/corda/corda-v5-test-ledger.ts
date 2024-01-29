@@ -26,6 +26,7 @@ export interface ICordaV5TestLedgerConstructorOptions {
   postgresPort?: number;
   logLevel?: LogLevelDesc;
   emitContainerLogs?: boolean;
+  rpcPortA?: number;
 }
 
 /*
@@ -33,9 +34,10 @@ export interface ICordaV5TestLedgerConstructorOptions {
  */
 const DEFAULTS = Object.freeze({
   imageVersion: "latest",
-  imageName: "ghcr.io/hyperledger/cactus-corda-5-all-in-one-alpha-2023-10-18",
+  imageName: "cactuts/newcordaimg",
   publicPort: 8888,
   postgresPort: 5431,
+  rpcPortA: 10008,
 });
 export const CORDA_V5_TEST_LEDGER_DEFAULT_OPTIONS = DEFAULTS;
 
@@ -59,7 +61,7 @@ export class CordaV5TestLedger implements ITestLedger {
   public get className(): string {
     return CordaV5TestLedger.CLASS_NAME;
   }
-
+  public readonly rpcPortA: number;
   public readonly imageVersion: string;
   public readonly imageName: string;
   public readonly publicPort: number;
@@ -81,6 +83,8 @@ export class CordaV5TestLedger implements ITestLedger {
     this.emitContainerLogs = Bools.isBooleanStrict(opts.emitContainerLogs)
       ? (opts.emitContainerLogs as boolean)
       : true;
+
+    this.rpcPortA = opts.rpcPortA || DEFAULTS.rpcPortA;
 
     this.validateConstructorOptions();
     const label = "corda-v5-test-ledger";
@@ -249,5 +253,21 @@ export class CordaV5TestLedger implements ITestLedger {
     if (validationResult.error) {
       throw new Error(`${fnTag} ${validationResult.error.annotate()}`);
     }
+  }
+
+  //Code for connector ports
+  public async getRpcAPublicPort(): Promise<number> {
+    const aContainerInfo = await this.getContainerInfo();
+    return Containers.getPublicPort(this.rpcPortA, aContainerInfo);
+  }
+}
+
+export function extractShortHash(shortHashID: string, name: string) {
+  const regex = new RegExp(`MyCorDapp\\s*([A-Z0-9]*)\\s*CN=${name}`);
+  const match = shortHashID.match(regex);
+  if (match) {
+    return match[1];
+  } else {
+    return "err";
   }
 }

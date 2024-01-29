@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 import javax.validation.Valid
-import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 
@@ -21,9 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 data class CPIV5Response(
 
     @field:Valid
-    @Schema(example = "null", description = "")
     @get:JsonProperty("cpis") val cpis: kotlin.collections.List<CPIV5ResponseCpisInner>? = null
 ) {
 
 }
-

@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 import javax.validation.Valid
-import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 
@@ -20,12 +19,9 @@ import io.swagger.v3.oas.annotations.media.Schema
  */
 data class FlowV5Error(
 
-    @Schema(example = "string", required = true, description = "")
     @get:JsonProperty("message", required = true) val message: kotlin.String,
 
-    @Schema(example = "string", required = true, description = "")
     @get:JsonProperty("type", required = true) val type: kotlin.String
 ) {
 
 }
-

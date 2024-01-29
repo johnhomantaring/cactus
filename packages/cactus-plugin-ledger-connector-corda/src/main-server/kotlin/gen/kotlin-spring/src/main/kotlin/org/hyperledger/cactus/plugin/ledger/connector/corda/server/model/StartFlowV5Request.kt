@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 import javax.validation.Valid
-import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * This method starts a new instance for the specified flow for the specified holding identity.
@@ -22,16 +21,12 @@ import io.swagger.v3.oas.annotations.media.Schema
  */
 data class StartFlowV5Request(
 
-    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("clientRequestId", required = true) val clientRequestId: kotlin.String,
 
-    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("flowClassName", required = true) val flowClassName: kotlin.String,
 
     @field:Valid
-    @Schema(example = "null", required = true, description = "")
     @get:JsonProperty("requestBody", required = true) val requestBody: StartFlowV5RequestRequestBody
 ) {
 
 }
-

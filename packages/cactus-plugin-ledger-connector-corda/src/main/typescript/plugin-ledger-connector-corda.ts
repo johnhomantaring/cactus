@@ -284,6 +284,7 @@ export class PluginLedgerConnectorCorda
     }
     this.log.info(`Instantiated endpoints of ${pkgName}`);
     return endpoints;
+    console.log(endpoints);
   }
 
   public async shutdown(): Promise<void> {

@@ -63,10 +63,8 @@ export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
     };
   }
 
-  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"] {
-    return OAS.paths[
-      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"
-    ];
+  public get oasPath(): (typeof OAS.paths)["/api/v1/flow/{holdingIDShortHash}"] {
+    return OAS.paths["/api/v1/flow/{holdingIDShortHash}"];
   }
 
   /**

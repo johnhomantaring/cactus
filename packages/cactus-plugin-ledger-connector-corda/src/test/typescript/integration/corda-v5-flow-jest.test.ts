@@ -1,11 +1,13 @@
 // import test, { Test } from "tape-promise/tape";
 import { v4 as uuidv4 } from "uuid";
+import { v4 as internalIpV4 } from "internal-ip";
 import "jest-extended";
 import { Config as SshConfig } from "node-ssh";
 import {
   CordaV5TestLedger,
   Containers,
   pruneDockerAllIfGithubAction,
+  CordaConnectorContainer,
 } from "@hyperledger/cactus-test-tooling";
 
 import { LogLevelDesc } from "@hyperledger/cactus-common";
@@ -24,6 +26,7 @@ import exp from "constants";
 import { check } from "yargs";
 import { response } from "express";
 import { interval } from "rxjs";
+import { extractShortHash } from "./../../../../../cactus-test-tooling/src/main/typescript/corda/corda-v5-test-ledger";
 
 describe("Corda Setup", () => {
   const cordaV5TestLedger = new CordaV5TestLedger();
@@ -85,22 +88,13 @@ describe("Corda Setup", () => {
     shortHashID = await Containers.exec(container, cmd, timeout, logLevel, cwd);
   });
 
-  function extractShortHash(name: string) {
-    const regex = new RegExp(`MyCorDapp\\s*([A-Z0-9]*)\\s*CN=${name}`);
-    const match = shortHashID.match(regex);
-    if (match) {
-      return match[1];
-    } else {
-      return "err";
-    }
-  }
   describe("Endpoint Testing", () => {
     let shortHashAlice = "";
     let shortHashBob = "";
     let shortHashCharlie = "";
     let shortHashDave = "";
     it("Extract short hash for Alice", () => {
-      shortHashAlice = extractShortHash("Alice");
+      shortHashAlice = extractShortHash(shortHashID, "Alice");
       expect(shortHashAlice).toBeTruthy();
       expect(`Short hash ID for Alice: ${shortHashAlice}`).toMatch(
         /Short hash ID for Alice:/,
@@ -108,7 +102,7 @@ describe("Corda Setup", () => {
       console.log(`Short hash ID for Alice: ${shortHashAlice}`);
     });
     it("Extract short hash for Bob", () => {
-      shortHashBob = extractShortHash("Bob");
+      shortHashBob = extractShortHash(shortHashID, "Bob");
       expect(shortHashBob).toBeTruthy();
       expect(`Short hash ID for Bob: ${shortHashBob}`).toMatch(
         /Short hash ID for Bob:/,
@@ -116,7 +110,7 @@ describe("Corda Setup", () => {
       console.log(`Short hash ID for Bob: ${shortHashBob}`);
     });
     it("Extract short hash for Charlie", () => {
-      shortHashCharlie = extractShortHash("Charlie");
+      shortHashCharlie = extractShortHash(shortHashID, "Charlie");
       expect(typeof shortHashCharlie === "string").toBe(true);
       expect(shortHashCharlie).toBeTruthy();
       expect(`Short hash ID for Charlie: ${shortHashCharlie}`).toMatch(
@@ -125,7 +119,7 @@ describe("Corda Setup", () => {
       console.log(`Short hash ID for Charlie: ${shortHashCharlie}`);
     });
     it("Extract short hash for Dave", () => {
-      shortHashDave = extractShortHash("Dave");
+      shortHashDave = extractShortHash(shortHashID, "Dave");
       expect(shortHashDave).toBeTruthy();
       expect(`Short hash ID for Dave: ${shortHashDave}`).toMatch(
         /Short hash ID for Dave:/,

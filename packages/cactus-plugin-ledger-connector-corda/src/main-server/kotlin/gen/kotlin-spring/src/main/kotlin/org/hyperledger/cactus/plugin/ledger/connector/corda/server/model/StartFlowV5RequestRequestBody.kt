@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 import javax.validation.Valid
-import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 
@@ -22,18 +21,13 @@ import io.swagger.v3.oas.annotations.media.Schema
  */
 data class StartFlowV5RequestRequestBody(
 
-    @Schema(example = "null", description = "")
     @get:JsonProperty("chatName") val chatName: kotlin.String? = null,
 
-    @Schema(example = "null", description = "")
     @get:JsonProperty("otherMember") val otherMember: kotlin.String? = null,
 
-    @Schema(example = "null", description = "")
     @get:JsonProperty("message") val message: kotlin.String? = null,
 
-    @Schema(example = "null", description = "")
     @get:JsonProperty("numberOfRecords") val numberOfRecords: kotlin.String? = null
 ) {
 
 }
-
