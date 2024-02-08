@@ -23,12 +23,14 @@ import {
 } from "../generated/openapi/typescript-axios";
 
 import OAS from "../../json/openapi.json";
+import { PluginLedgerConnectorCorda } from "../plugin-ledger-connector-corda";
 
 export interface IFlowStatusResponseEndpointV1Options {
   logLevel?: LogLevelDesc;
   apiUrl?: string;
   holdingIDShortHash: string;
   clientRequestID: string;
+  connector: PluginLedgerConnectorCorda;
 }
 
 export class FlowStatusResponseEndpointV1 implements IWebServiceEndpoint {
@@ -44,6 +46,7 @@ export class FlowStatusResponseEndpointV1 implements IWebServiceEndpoint {
     const fnTag = `${this.className}#constructor()`;
 
     Checks.truthy(options, `${fnTag} options`);
+    Checks.truthy(options.connector, `${fnTag} options.connector`);
 
     this.log = LoggerProvider.getOrCreate({
       label: "list-flow-status-response-endpoint-v1",
@@ -62,8 +65,10 @@ export class FlowStatusResponseEndpointV1 implements IWebServiceEndpoint {
     };
   }
 
-  public get oasPath(): (typeof OAS.paths)["/api/v1/flow/{holdingIDShortHash}/{clientRequestID}"] {
-    return OAS.paths["/api/v1/flow/{holdingIDShortHash}/{clientRequestID}"];
+  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}"] {
+    return OAS.paths[
+      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}"
+    ];
   }
 
   /**
@@ -111,6 +116,7 @@ export class FlowStatusResponseEndpointV1 implements IWebServiceEndpoint {
     }
   }
 
+  // to remove
   async callInternalContainer(req: any): Promise<FlowStatusV5Response> {
     const apiConfig = new Configuration({ basePath: this.apiUrl });
     const apiClient = new DefaultApi(apiConfig);

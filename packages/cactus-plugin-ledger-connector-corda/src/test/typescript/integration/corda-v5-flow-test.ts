@@ -119,7 +119,7 @@ test("can get past logs of an account", async (t: Test) => {
     },
   };
 
-  const listCPI = await apiClient.getCPIResponse();
+  const listCPI = await apiClient.listCPIV1();
   t.ok(listCPI, "getCPIResponse truthy OK");
 
   const startflow = await apiClient.startFlowParameters(
@@ -309,7 +309,7 @@ test("can get past logs of an account", async (t: Test) => {
     const axiosInstance = axios.create(axiosConfig);
     const apiClient = new DefaultApi(undefined, apiUrl, axiosInstance);
     try {
-      await apiClient.getCPIResponse();
+      await apiClient.listCPIV1();
       t.fail("Expected an error for unauthorized access but it succeeded.");
     } catch (error) {
       t.pass("Failed as expected for unauthorized access.");

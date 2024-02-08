@@ -29,6 +29,7 @@ import {
   CordaVersion,
 } from "../plugin-ledger-connector-corda";
 export interface IListFlowsEndpointV1Options {
+  // Gayain si deploy-contract-endpoints
   logLevel?: LogLevelDesc;
   apiUrl?: string;
   cordaVersion?: CordaVersion;

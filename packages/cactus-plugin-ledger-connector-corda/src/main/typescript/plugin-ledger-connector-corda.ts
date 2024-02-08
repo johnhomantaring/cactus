@@ -1,9 +1,16 @@
 import { Server } from "http";
 import { Server as SecureServer } from "https";
 import { Config as SshConfig } from "node-ssh";
-import { Express } from "express";
+import { Express, application, urlencoded } from "express";
 
 import OAS from "../json/openapi.json";
+import {
+  DefaultApi,
+  CPIV5Response,
+  DefaultApiAxiosParamCreator,
+  StartFlowV5Request,
+  FlowStatusV5Response,
+} from "./generated/openapi/typescript-axios";
 
 import {
   IPluginLedgerConnector,
@@ -11,6 +18,7 @@ import {
   IPluginWebService,
   ICactusPluginOptions,
   ConsensusAlgorithmFamily,
+  Configuration,
 } from "@hyperledger/cactus-core-api";
 import { consensusHasTransactionFinality } from "@hyperledger/cactus-core";
 import {
@@ -86,14 +94,22 @@ export interface IPluginLedgerConnectorCordaOptions
 }
 
 export class PluginLedgerConnectorCorda
-  implements IPluginLedgerConnector<any, any, any, any>, IPluginWebService
+  implements
+    IPluginLedgerConnector<
+      FlowStatusV5Response,
+      StartFlowV5Request,
+      CPIV5Response,
+      any
+    >,
+    IPluginWebService
 {
+  //add here implement similar to transact connector-fabric,
   public static readonly CLASS_NAME = "DeployContractJarsEndpoint";
 
   private readonly instanceId: string;
   private readonly log: Logger;
   public prometheusExporter: PrometheusExporter;
-
+  // need to add checking if v4 or v5 and what to deploy
   private endpoints: IWebServiceEndpoint[] | undefined;
 
   public get className(): string {
@@ -257,6 +273,7 @@ export class PluginLedgerConnectorCorda
       const opts: IListCPIEndpointV1Options = {
         apiUrl: this.options.apiUrl,
         logLevel: this.options.logLevel,
+        connector: this,
       };
       const endpoint = new ListCPIEndpointV1(opts);
       endpoints.push(endpoint);
@@ -267,6 +284,7 @@ export class PluginLedgerConnectorCorda
         apiUrl: this.options.apiUrl,
         logLevel: this.options.logLevel,
         holdingIDShortHash: this.options.holdingIDShortHash,
+        connector: this,
       };
       const endpoint = new FlowStatusEndpointV1(opts);
       endpoints.push(endpoint);
@@ -278,6 +296,7 @@ export class PluginLedgerConnectorCorda
         logLevel: this.options.logLevel,
         holdingIDShortHash: this.options.holdingIDShortHash,
         clientRequestID: this.options.clientRequestID,
+        connector: this,
       };
       const endpoint = new FlowStatusResponseEndpointV1(opts);
       endpoints.push(endpoint);
@@ -293,5 +312,34 @@ export class PluginLedgerConnectorCorda
 
   public async getFlowList(): Promise<string[]> {
     return ["getFlowList()_NOT_IMPLEMENTED"];
+  }
+  public async startFlowParameters(
+    holdingshortHashID: string,
+    req: any,
+  ): Promise<FlowStatusV5Response> {
+    const fnTag = `${this.className}#startFlowV5Request()`;
+    this.log.debug("%s ENTER", fnTag);
+    //Build the path here? Remove later
+    const url = "https://127.0.0.1:8888";
+    const path =
+      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/" +
+      holdingshortHashID;
+    const apiConfig = new Configuration({ basePath: url + path });
+    const apiClient = new DefaultApi(apiConfig);
+    const res = await apiClient.startFlowParameters(holdingshortHashID, req);
+    return res.data;
+  }
+
+  public async listCPI(): Promise<CPIV5Response> {
+    const fnTag = `${this.className}#listCPIV1()`;
+    this.log.debug("%s ENTER", fnTag);
+    //Build the path here? Remove later
+    const url = "https://127.0.0.1:8888";
+    const path =
+      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listCPI";
+    const apiConfig = new Configuration({ basePath: url + path });
+    const apiClient = new DefaultApi(apiConfig);
+    const res = await apiClient.listCPIV1();
+    return res.data;
   }
 }

@@ -85,7 +85,7 @@ class ApiPluginLedgerConnectorCordaController(@Autowired(required = true) val se
 
     @RequestMapping(
         method = [RequestMethod.GET],
-        value = ["/api/v1/flow/{holdingIDShortHash}/{clientRequestID}"],
+        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}"],
         produces = ["text/plain"]
     )
     fun flowStatusResponse( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String, @PathVariable("clientRequestID") clientRequestID: kotlin.String): ResponseEntity<FlowStatusV5Response> {
@@ -95,21 +95,11 @@ class ApiPluginLedgerConnectorCordaController(@Autowired(required = true) val se
 
     @RequestMapping(
         method = [RequestMethod.GET],
-        value = ["/api/v1/flow/{holdingIDShortHash}"],
+        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"],
         produces = ["text/plain"]
     )
     fun flowStatusResponses( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String): ResponseEntity<FlowStatusV5Responses> {
         return ResponseEntity(service.flowStatusResponses(holdingIDShortHash), HttpStatus.valueOf(200))
-    }
-
-
-    @RequestMapping(
-        method = [RequestMethod.GET],
-        value = ["/api/v1/cpi"],
-        produces = ["application/json"]
-    )
-    fun getCPIResponse(): ResponseEntity<CPIV5Response> {
-        return ResponseEntity(service.getCPIResponse(), HttpStatus.valueOf(200))
     }
 
 
@@ -146,6 +136,16 @@ class ApiPluginLedgerConnectorCordaController(@Autowired(required = true) val se
 
 
     @RequestMapping(
+        method = [RequestMethod.GET],
+        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listCPI"],
+        produces = ["application/json"]
+    )
+    fun listCPIV1(): ResponseEntity<CPIV5Response> {
+        return ResponseEntity(service.listCPIV1(), HttpStatus.valueOf(200))
+    }
+
+
+    @RequestMapping(
         method = [RequestMethod.POST],
         value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/list-flows"],
         produces = ["application/json"],
@@ -169,7 +169,7 @@ class ApiPluginLedgerConnectorCordaController(@Autowired(required = true) val se
 
     @RequestMapping(
         method = [RequestMethod.POST],
-        value = ["/api/v1/flow/{holdingIDShortHash}"],
+        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"],
         produces = ["application/json"],
         consumes = ["application/json"]
     )

@@ -347,7 +347,7 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
         
         return RequestConfig(
             method = RequestMethod.GET,
-            path = "/api/v1/flow/{holdingIDShortHash}/{clientRequestID}".replace("{"+"holdingIDShortHash"+"}", encodeURIComponent(holdingIDShortHash.toString())).replace("{"+"clientRequestID"+"}", encodeURIComponent(clientRequestID.toString())),
+            path = "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}".replace("{"+"holdingIDShortHash"+"}", encodeURIComponent(holdingIDShortHash.toString())).replace("{"+"clientRequestID"+"}", encodeURIComponent(clientRequestID.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,
@@ -417,75 +417,7 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
         
         return RequestConfig(
             method = RequestMethod.GET,
-            path = "/api/v1/flow/{holdingIDShortHash}".replace("{"+"holdingIDShortHash"+"}", encodeURIComponent(holdingIDShortHash.toString())),
-            query = localVariableQuery,
-            headers = localVariableHeaders,
-            requiresAuthentication = false,
-            body = localVariableBody
-        )
-    }
-
-    /**
-     * List all CPIs uploaded to the cluster
-     * 
-     * @return CPIV5Response
-     * @throws IllegalStateException If the request is not correctly configured
-     * @throws IOException Rethrows the OkHttp execute method exception
-     * @throws UnsupportedOperationException If the API returns an informational or redirection response
-     * @throws ClientException If the API returns a client error response
-     * @throws ServerException If the API returns a server error response
-     */
-    @Suppress("UNCHECKED_CAST")
-    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getCPIResponse() : CPIV5Response {
-        val localVarResponse = getCPIResponseWithHttpInfo()
-
-        return when (localVarResponse.responseType) {
-            ResponseType.Success -> (localVarResponse as Success<*>).data as CPIV5Response
-            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
-            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
-            ResponseType.ClientError -> {
-                val localVarError = localVarResponse as ClientError<*>
-                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
-            }
-            ResponseType.ServerError -> {
-                val localVarError = localVarResponse as ServerError<*>
-                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
-            }
-        }
-    }
-
-    /**
-     * List all CPIs uploaded to the cluster
-     * 
-     * @return ApiResponse<CPIV5Response?>
-     * @throws IllegalStateException If the request is not correctly configured
-     * @throws IOException Rethrows the OkHttp execute method exception
-     */
-    @Suppress("UNCHECKED_CAST")
-    @Throws(IllegalStateException::class, IOException::class)
-    fun getCPIResponseWithHttpInfo() : ApiResponse<CPIV5Response?> {
-        val localVariableConfig = getCPIResponseRequestConfig()
-
-        return request<Unit, CPIV5Response>(
-            localVariableConfig
-        )
-    }
-
-    /**
-     * To obtain the request config of the operation getCPIResponse
-     *
-     * @return RequestConfig
-     */
-    fun getCPIResponseRequestConfig() : RequestConfig<Unit> {
-        val localVariableBody = null
-        val localVariableQuery: MultiValueMap = mutableMapOf()
-        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
-        localVariableHeaders["Accept"] = "application/json"
-
-        return RequestConfig(
-            method = RequestMethod.GET,
-            path = "/api/v1/cpi",
+            path = "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}".replace("{"+"holdingIDShortHash"+"}", encodeURIComponent(holdingIDShortHash.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,
@@ -705,6 +637,74 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
     }
 
     /**
+     * List all CPIs uploaded to the cluster
+     * 
+     * @return CPIV5Response
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun listCPIV1() : CPIV5Response {
+        val localVarResponse = listCPIV1WithHttpInfo()
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as CPIV5Response
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * List all CPIs uploaded to the cluster
+     * 
+     * @return ApiResponse<CPIV5Response?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun listCPIV1WithHttpInfo() : ApiResponse<CPIV5Response?> {
+        val localVariableConfig = listCPIV1RequestConfig()
+
+        return request<Unit, CPIV5Response>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation listCPIV1
+     *
+     * @return RequestConfig
+     */
+    fun listCPIV1RequestConfig() : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listCPI",
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = false,
+            body = localVariableBody
+        )
+    }
+
+    /**
      * 
      * Responds with a list of the flows on the Corda node.
      * @param listFlowsV1Request  (optional)
@@ -915,7 +915,7 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
 
         return RequestConfig(
             method = RequestMethod.POST,
-            path = "/api/v1/flow/{holdingIDShortHash}".replace("{"+"holdingIDShortHash"+"}", encodeURIComponent(holdingIDShortHash.toString())),
+            path = "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}".replace("{"+"holdingIDShortHash"+"}", encodeURIComponent(holdingIDShortHash.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,

@@ -23,9 +23,11 @@ import {
 
 import OAS from "../../json/openapi.json";
 import https from "https";
+import { PluginLedgerConnectorCorda } from "../plugin-ledger-connector-corda";
 export interface IListCPIEndpointV1Options {
   logLevel?: LogLevelDesc;
   apiUrl?: string;
+  connector: PluginLedgerConnectorCorda;
 }
 
 export class ListCPIEndpointV1 implements IWebServiceEndpoint {
@@ -61,8 +63,10 @@ export class ListCPIEndpointV1 implements IWebServiceEndpoint {
     };
   }
 
-  public get oasPath(): (typeof OAS.paths)["/api/v1/cpi"] {
-    return OAS.paths["/api/v1/cpi"];
+  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listCPI"] {
+    return OAS.paths[
+      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listCPI"
+    ];
   }
 
   /**
@@ -99,7 +103,7 @@ export class ListCPIEndpointV1 implements IWebServiceEndpoint {
 
     try {
       if (this.apiUrl === undefined) throw "apiUrl option is necessary";
-      const body = await this.callInternalContainer(req.body);
+      const body = await this.options.connector.listCPI();
       res.status(200);
       res.json(body);
     } catch (ex) {
@@ -109,11 +113,10 @@ export class ListCPIEndpointV1 implements IWebServiceEndpoint {
       res.json({ error: ex.stack });
     }
   }
-
-  async callInternalContainer(req: any): Promise<CPIV5Response> {
-    const apiConfig = new Configuration({ basePath: this.apiUrl });
-    const apiClient = new DefaultApi(apiConfig);
-    const res = await apiClient.getCPIResponse(req);
-    return res.data;
-  }
+  // async callInternalContainer(req: any): Promise<CPIV5Response> {
+  //   const apiConfig = new Configuration({ basePath: this.apiUrl });
+  //   const apiClient = new DefaultApi(apiConfig);
+  //   const res = await apiClient.getCPIResponse(req);
+  //   return res.data;
+  // }
 }

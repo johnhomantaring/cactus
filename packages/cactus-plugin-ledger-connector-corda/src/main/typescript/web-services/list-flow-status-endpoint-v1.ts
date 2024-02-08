@@ -15,6 +15,7 @@ import {
   Logger,
   LoggerProvider,
   LogLevelDesc,
+  safeStringifyException,
 } from "@hyperledger/cactus-common";
 
 import {
@@ -24,11 +25,13 @@ import {
 } from "../generated/openapi/typescript-axios";
 
 import OAS from "../../json/openapi.json";
+import { PluginLedgerConnectorCorda } from "../plugin-ledger-connector-corda";
 
 export interface IFlowStatusEndpointV1Options {
   logLevel?: LogLevelDesc;
   apiUrl?: string;
   holdingIDShortHash: string;
+  connector: PluginLedgerConnectorCorda;
 }
 
 export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
@@ -45,7 +48,7 @@ export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
     const fnTag = `${this.className}#constructor()`;
 
     Checks.truthy(options, `${fnTag} options`);
-
+    Checks.truthy(options.connector, `${fnTag} options.connector`);
     this.log = LoggerProvider.getOrCreate({
       label: "list-flow-status-endpoint-v1",
       level: options.logLevel || "INFO",
@@ -63,8 +66,10 @@ export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
     };
   }
 
-  public get oasPath(): (typeof OAS.paths)["/api/v1/flow/{holdingIDShortHash}"] {
-    return OAS.paths["/api/v1/flow/{holdingIDShortHash}"];
+  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"] {
+    return OAS.paths[
+      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"
+    ];
   }
 
   /**
@@ -94,33 +99,55 @@ export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
     return this;
   }
 
-  async handleRequest(req: Request, res: Response): Promise<void> {
-    const fnTag = "FlowStatusEndpointV1#constructor()";
-    const verbUpper = this.getVerbLowerCase().toUpperCase();
-    this.log.debug(`${verbUpper} ${this.getPath()}`);
+  // async handleRequest(req: Request, res: Response): Promise<void> {
+  //   const fnTag = "FlowStatusEndpointV1#constructor()";
+  //   const verbUpper = this.getVerbLowerCase().toUpperCase();
+  //   this.log.debug(`${verbUpper} ${this.getPath()}`);
 
+  //   try {
+  //     if (this.apiUrl === undefined) throw "apiUrl option is necessary";
+  //     const body = await this.options.connector.startFlowParameters(
+  //       this.options.holdingIDShortHash,
+  //       req.body,
+  //     );
+  //     res.status(200);
+  //     res.json(body);
+  //   } catch (ex) {
+  //     this.log.error(`${fnTag} failed to serve request`, ex);
+  //     res.status(500);
+  //     res.statusMessage = ex.message;
+  //     res.json({ error: ex.stack });
+  //   }
+  // }
+  async handleRequest(req: Request, res: Response): Promise<void> {
+    const fnTag = "FlowStatusEndpointV1#handleRequest()";
+    this.log.debug(`POST ${this.getPath()}`);
     try {
-      if (this.apiUrl === undefined) throw "apiUrl option is necessary";
-      const body = await this.callInternalContainer(req.body);
-      res.status(200);
-      res.json(body);
-    } catch (ex) {
-      this.log.error(`${fnTag} failed to serve request`, ex);
-      res.status(500);
-      res.statusMessage = ex.message;
-      res.json({ error: ex.stack });
+      res
+        .status(200)
+        .json(
+          await this.options.connector.startFlowParameters(
+            this.options.holdingIDShortHash,
+            req.body,
+          ),
+        );
+    } catch (error) {
+      this.log.error(`Crash while serving ${fnTag}`, error);
+      res.status(500).json({
+        message: "Internal Server Error",
+        error: safeStringifyException(error),
+      });
     }
   }
-
-  async callInternalContainer(
-    req: StartFlowV5Request,
-  ): Promise<FlowStatusV5Response> {
-    const apiConfig = new Configuration({ basePath: this.apiUrl });
-    const apiClient = new DefaultApi(apiConfig);
-    const res = await apiClient.startFlowParameters(
-      this.options.holdingIDShortHash,
-      req,
-    );
-    return res.data;
-  }
+  // async callInternalContainer(
+  //   req: StartFlowV5Request,
+  // ): Promise<FlowStatusV5Response> {
+  //   const apiConfig = new Configuration({ basePath: this.apiUrl });
+  //   const apiClient = new DefaultApi(apiConfig);
+  //   const res = await apiClient.startFlowParameters(
+  //     this.options.holdingIDShortHash,
+  //     req,
+  //   );
+  //   return res.data;
+  // }
 }

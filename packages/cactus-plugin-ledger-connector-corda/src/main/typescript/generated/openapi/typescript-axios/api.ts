@@ -1325,7 +1325,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('flowStatusResponse', 'holdingIDShortHash', holdingIDShortHash)
             // verify required parameter 'clientRequestID' is not null or undefined
             assertParamExists('flowStatusResponse', 'clientRequestID', clientRequestID)
-            const localVarPath = `/api/v1/flow/{holdingIDShortHash}/{clientRequestID}`
+            const localVarPath = `/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}`
                 .replace(`{${"holdingIDShortHash"}}`, encodeURIComponent(String(holdingIDShortHash)))
                 .replace(`{${"clientRequestID"}}`, encodeURIComponent(String(clientRequestID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1360,38 +1360,8 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         flowStatusResponses: async (holdingIDShortHash: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'holdingIDShortHash' is not null or undefined
             assertParamExists('flowStatusResponses', 'holdingIDShortHash', holdingIDShortHash)
-            const localVarPath = `/api/v1/flow/{holdingIDShortHash}`
+            const localVarPath = `/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}`
                 .replace(`{${"holdingIDShortHash"}}`, encodeURIComponent(String(holdingIDShortHash)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary List all CPIs uploaded to the cluster
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCPIResponse: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/v1/cpi`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1513,6 +1483,36 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * 
+         * @summary List all CPIs uploaded to the cluster
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listCPIV1: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listCPI`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Responds with a list of the flows on the Corda node.
          * @param {ListFlowsV1Request} [listFlowsV1Request] 
          * @param {*} [options] Override http request option.
@@ -1591,7 +1591,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('startFlowParameters', 'holdingIDShortHash', holdingIDShortHash)
             // verify required parameter 'startFlowV5Request' is not null or undefined
             assertParamExists('startFlowParameters', 'startFlowV5Request', startFlowV5Request)
-            const localVarPath = `/api/v1/flow/{holdingIDShortHash}`
+            const localVarPath = `/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}`
                 .replace(`{${"holdingIDShortHash"}}`, encodeURIComponent(String(holdingIDShortHash)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1753,16 +1753,6 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary List all CPIs uploaded to the cluster
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getCPIResponse(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CPIV5Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getCPIResponse(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @summary Get transactions for monitored state classes.
          * @param {GetMonitorTransactionsV1Request} [getMonitorTransactionsV1Request] 
          * @param {*} [options] Override http request option.
@@ -1791,6 +1781,16 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          */
         async invokeContractV1(invokeContractV1Request?: InvokeContractV1Request, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InvokeContractV1Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.invokeContractV1(invokeContractV1Request, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary List all CPIs uploaded to the cluster
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listCPIV1(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CPIV5Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listCPIV1(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1909,15 +1909,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @summary List all CPIs uploaded to the cluster
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCPIResponse(options?: any): AxiosPromise<CPIV5Response> {
-            return localVarFp.getCPIResponse(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary Get transactions for monitored state classes.
          * @param {GetMonitorTransactionsV1Request} [getMonitorTransactionsV1Request] 
          * @param {*} [options] Override http request option.
@@ -1944,6 +1935,15 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         invokeContractV1(invokeContractV1Request?: InvokeContractV1Request, options?: any): AxiosPromise<InvokeContractV1Response> {
             return localVarFp.invokeContractV1(invokeContractV1Request, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary List all CPIs uploaded to the cluster
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listCPIV1(options?: any): AxiosPromise<CPIV5Response> {
+            return localVarFp.listCPIV1(options).then((request) => request(axios, basePath));
         },
         /**
          * Responds with a list of the flows on the Corda node.
@@ -2066,17 +2066,6 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
-     * @summary List all CPIs uploaded to the cluster
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public getCPIResponse(options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getCPIResponse(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary Get transactions for monitored state classes.
      * @param {GetMonitorTransactionsV1Request} [getMonitorTransactionsV1Request] 
      * @param {*} [options] Override http request option.
@@ -2108,6 +2097,17 @@ export class DefaultApi extends BaseAPI {
      */
     public invokeContractV1(invokeContractV1Request?: InvokeContractV1Request, options?: AxiosRequestConfig) {
         return DefaultApiFp(this.configuration).invokeContractV1(invokeContractV1Request, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary List all CPIs uploaded to the cluster
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public listCPIV1(options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).listCPIV1(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
