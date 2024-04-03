@@ -179,10 +179,10 @@ describe("Corda Setup", () => {
       console.log(`Short hash ID for Dave: ${shortHashDave}`);
     });
 
-    // it("CPI test", async () => {
-    //   const listCPI = await apiClient.listCPIV1();
-    //   expect(listCPI).toBeTruthy();
-    // });
+    it("CPI test", async () => {
+      const listCPI = await apiClient.listCPIV1();
+      expect(listCPI).toBeTruthy();
+    });
     it("StartFlow test", async () => {
       const request = {
         clientRequestId: "test-1",
