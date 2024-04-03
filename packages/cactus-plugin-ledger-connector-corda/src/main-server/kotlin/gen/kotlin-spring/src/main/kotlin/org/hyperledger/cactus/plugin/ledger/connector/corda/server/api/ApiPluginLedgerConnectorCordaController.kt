@@ -173,8 +173,8 @@ class ApiPluginLedgerConnectorCordaController(@Autowired(required = true) val se
         produces = ["application/json"],
         consumes = ["application/json"]
     )
-    fun startFlowParameters( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String, @Valid @RequestBody startFlowV5Request: StartFlowV5Request): ResponseEntity<FlowStatusV5Response> {
-        return ResponseEntity(service.startFlowParameters(holdingIDShortHash, startFlowV5Request), HttpStatus.valueOf(200))
+    fun startFlowParametersV1( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String, @Valid @RequestBody startFlowV5Request: StartFlowV5Request): ResponseEntity<FlowStatusV5Response> {
+        return ResponseEntity(service.startFlowParametersV1(holdingIDShortHash, startFlowV5Request), HttpStatus.valueOf(200))
     }
 
 

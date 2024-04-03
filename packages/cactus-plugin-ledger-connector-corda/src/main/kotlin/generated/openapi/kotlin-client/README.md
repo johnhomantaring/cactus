@@ -55,7 +55,7 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**listCPIV1**](docs/DefaultApi.md#listcpiv1) | **GET** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listCPI | List all CPIs uploaded to the cluster
 *DefaultApi* | [**listFlowsV1**](docs/DefaultApi.md#listflowsv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/list-flows | 
 *DefaultApi* | [**networkMapV1**](docs/DefaultApi.md#networkmapv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/network-map | 
-*DefaultApi* | [**startFlowParameters**](docs/DefaultApi.md#startflowparameters) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash} | This method starts a new instance for the specified flow for the specified holding identity.
+*DefaultApi* | [**startFlowParametersV1**](docs/DefaultApi.md#startflowparametersv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash} | This method starts a new instance for the specified flow for the specified holding identity.
 *DefaultApi* | [**startMonitorV1**](docs/DefaultApi.md#startmonitorv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/start-monitor | Start monitoring corda changes (transactions) of given state class
 *DefaultApi* | [**stopMonitorV1**](docs/DefaultApi.md#stopmonitorv1) | **DELETE** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/stop-monitor | Stop monitoring corda changes (transactions) of given state class
 

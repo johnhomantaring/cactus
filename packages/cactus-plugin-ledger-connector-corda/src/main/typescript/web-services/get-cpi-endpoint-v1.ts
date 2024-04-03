@@ -113,10 +113,4 @@ export class ListCPIEndpointV1 implements IWebServiceEndpoint {
       res.json({ error: ex.stack });
     }
   }
-  // async callInternalContainer(req: any): Promise<CPIV5Response> {
-  //   const apiConfig = new Configuration({ basePath: this.apiUrl });
-  //   const apiClient = new DefaultApi(apiConfig);
-  //   const res = await apiClient.getCPIResponse(req);
-  //   return res.data;
-  // }
 }

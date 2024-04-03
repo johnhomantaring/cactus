@@ -98,56 +98,22 @@ export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
     await registerWebServiceEndpoint(expressApp, this);
     return this;
   }
-
-  // async handleRequest(req: Request, res: Response): Promise<void> {
-  //   const fnTag = "FlowStatusEndpointV1#constructor()";
-  //   const verbUpper = this.getVerbLowerCase().toUpperCase();
-  //   this.log.debug(`${verbUpper} ${this.getPath()}`);
-
-  //   try {
-  //     if (this.apiUrl === undefined) throw "apiUrl option is necessary";
-  //     const body = await this.options.connector.startFlowParameters(
-  //       this.options.holdingIDShortHash,
-  //       req.body,
-  //     );
-  //     res.status(200);
-  //     res.json(body);
-  //   } catch (ex) {
-  //     this.log.error(`${fnTag} failed to serve request`, ex);
-  //     res.status(500);
-  //     res.statusMessage = ex.message;
-  //     res.json({ error: ex.stack });
-  //   }
-  // }
   async handleRequest(req: Request, res: Response): Promise<void> {
     const fnTag = "FlowStatusEndpointV1#handleRequest()";
     this.log.debug(`POST ${this.getPath()}`);
     try {
-      res
-        .status(200)
-        .json(
-          await this.options.connector.startFlowParameters(
-            this.options.holdingIDShortHash,
-            req.body,
-          ),
-        );
-    } catch (error) {
-      this.log.error(`Crash while serving ${fnTag}`, error);
-      res.status(500).json({
-        message: "Internal Server Error",
-        error: safeStringifyException(error),
-      });
+      if (this.apiUrl === undefined) throw "apiUrl option is necessary";
+      const body = await this.options.connector.startFlow(
+        this.options.holdingIDShortHash,
+        req.body,
+      );
+      res.status(200);
+      res.json(body);
+    } catch (ex) {
+      this.log.error(`${fnTag} failed to serve request`, ex);
+      res.status(500);
+      res.statusMessage = ex.message;
+      res.json({ error: ex.stack });
     }
   }
-  // async callInternalContainer(
-  //   req: StartFlowV5Request,
-  // ): Promise<FlowStatusV5Response> {
-  //   const apiConfig = new Configuration({ basePath: this.apiUrl });
-  //   const apiClient = new DefaultApi(apiConfig);
-  //   const res = await apiClient.startFlowParameters(
-  //     this.options.holdingIDShortHash,
-  //     req,
-  //   );
-  //   return res.data;
-  // }
 }

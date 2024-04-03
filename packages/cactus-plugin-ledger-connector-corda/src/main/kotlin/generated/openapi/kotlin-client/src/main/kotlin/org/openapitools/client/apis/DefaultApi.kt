@@ -862,8 +862,8 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun startFlowParameters(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : FlowStatusV5Response {
-        val localVarResponse = startFlowParametersWithHttpInfo(holdingIDShortHash = holdingIDShortHash, startFlowV5Request = startFlowV5Request)
+    fun startFlowParametersV1(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : FlowStatusV5Response {
+        val localVarResponse = startFlowParametersV1WithHttpInfo(holdingIDShortHash = holdingIDShortHash, startFlowV5Request = startFlowV5Request)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as FlowStatusV5Response
@@ -891,8 +891,8 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun startFlowParametersWithHttpInfo(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : ApiResponse<FlowStatusV5Response?> {
-        val localVariableConfig = startFlowParametersRequestConfig(holdingIDShortHash = holdingIDShortHash, startFlowV5Request = startFlowV5Request)
+    fun startFlowParametersV1WithHttpInfo(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : ApiResponse<FlowStatusV5Response?> {
+        val localVariableConfig = startFlowParametersV1RequestConfig(holdingIDShortHash = holdingIDShortHash, startFlowV5Request = startFlowV5Request)
 
         return request<StartFlowV5Request, FlowStatusV5Response>(
             localVariableConfig
@@ -900,13 +900,13 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
     }
 
     /**
-     * To obtain the request config of the operation startFlowParameters
+     * To obtain the request config of the operation startFlowParametersV1
      *
      * @param holdingIDShortHash Holding identity short hash
      * @param startFlowV5Request Request body for starting a flow
      * @return RequestConfig
      */
-    fun startFlowParametersRequestConfig(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : RequestConfig<StartFlowV5Request> {
+    fun startFlowParametersV1RequestConfig(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : RequestConfig<StartFlowV5Request> {
         val localVariableBody = startFlowV5Request
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

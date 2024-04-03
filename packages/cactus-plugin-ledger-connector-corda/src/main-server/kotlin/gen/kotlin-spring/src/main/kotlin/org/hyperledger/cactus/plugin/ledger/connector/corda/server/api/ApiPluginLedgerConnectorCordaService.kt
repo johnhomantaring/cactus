@@ -137,9 +137,9 @@ interface ApiPluginLedgerConnectorCordaService {
      * @param holdingIDShortHash Holding identity short hash (required)
      * @param startFlowV5Request Request body for starting a flow (required)
      * @return OK (status code 200)
-     * @see ApiPluginLedgerConnectorCorda#startFlowParameters
+     * @see ApiPluginLedgerConnectorCorda#startFlowParametersV1
      */
-    fun startFlowParameters(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request): FlowStatusV5Response
+    fun startFlowParametersV1(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request): FlowStatusV5Response
 
     /**
      * POST /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/start-monitor : Start monitoring corda changes (transactions) of given state class

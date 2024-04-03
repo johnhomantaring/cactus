@@ -1517,7 +1517,7 @@
                   "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"
               }
           },
-          "operationId": "startFlowParameters",
+          "operationId": "startFlowParametersV1",
           "summary": "This method starts a new instance for the specified flow for the specified holding identity.",
           "requestBody": {
               "description": "Request body for starting a flow",

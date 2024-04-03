@@ -1,7 +1,7 @@
 import { Server } from "http";
 import { Server as SecureServer } from "https";
 import { Config as SshConfig } from "node-ssh";
-import { Express, application, urlencoded } from "express";
+import { Express, application, response, urlencoded } from "express";
 
 import OAS from "../json/openapi.json";
 import {
@@ -67,7 +67,9 @@ import {
 } from "./web-services/diagnose-node-endpoint-v1";
 
 import fs from "fs";
-
+import fetch, { Headers } from "node-fetch";
+import https from "https";
+import bodyParser from "body-parser";
 export enum CordaVersion {
   CORDA_V4X = "CORDA_V4X",
   CORDA_V5 = "CORDA_V5",
@@ -313,33 +315,62 @@ export class PluginLedgerConnectorCorda
   public async getFlowList(): Promise<string[]> {
     return ["getFlowList()_NOT_IMPLEMENTED"];
   }
-  public async startFlowParameters(
-    holdingshortHashID: string,
-    req: any,
-  ): Promise<FlowStatusV5Response> {
+  public async startFlow(holdingshortHashID: string, req: any): Promise<any> {
     const fnTag = `${this.className}#startFlowV5Request()`;
     this.log.debug("%s ENTER", fnTag);
-    //Build the path here? Remove later
-    const url = "https://127.0.0.1:8888";
-    const path =
-      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/" +
-      holdingshortHashID;
-    const apiConfig = new Configuration({ basePath: url + path });
-    const apiClient = new DefaultApi(apiConfig);
-    const res = await apiClient.startFlowParameters(holdingshortHashID, req);
-    return res.data;
+    const username = "admin";
+    const password = "admin";
+    const authString = Buffer.from(`${username}:${password}`).toString(
+      "base64",
+    );
+    const headers = {
+      Authorization: `Basic ${authString}`,
+    };
+    const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+    try {
+      const response = await fetch(
+        "https://127.0.0.1:8888/api/v1/flow/" + holdingshortHashID,
+        {
+          method: `POST`,
+          headers: headers,
+          body: req,
+          agent: httpsAgent,
+        },
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      console.log("Response:", responseData);
+      return responseData;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }
 
-  public async listCPI(): Promise<CPIV5Response> {
-    const fnTag = `${this.className}#listCPIV1()`;
-    this.log.debug("%s ENTER", fnTag);
-    //Build the path here? Remove later
-    const url = "https://127.0.0.1:8888";
-    const path =
-      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listCPI";
-    const apiConfig = new Configuration({ basePath: url + path });
-    const apiClient = new DefaultApi(apiConfig);
-    const res = await apiClient.listCPIV1();
-    return res.data;
+  public async listCPI(): Promise<any> {
+    const username = "admin";
+    const password = "admin";
+    const authString = Buffer.from(`${username}:${password}`).toString(
+      "base64",
+    );
+    const headers = {
+      Authorization: `Basic ${authString}`,
+    };
+    const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+    try {
+      const response = await fetch("https://127.0.0.1:8888/api/v1/cpi", {
+        method: `GET`,
+        headers: headers,
+        agent: httpsAgent,
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }
 }

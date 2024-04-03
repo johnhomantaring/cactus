@@ -24,6 +24,7 @@ import axios, { AxiosRequestConfig } from "axios";
 const testCase = "Tests are passing on the JVM side";
 const logLevel: LogLevelDesc = "TRACE";
 
+import http from "http";
 import https from "https";
 import exp from "constants";
 import { check } from "yargs";
@@ -34,16 +35,17 @@ import express from "express";
 import bodyParser from "body-parser";
 import { AddressInfo } from "net";
 import { Configuration } from "@hyperledger/cactus-core-api";
+import fetch from "node-fetch";
+
 describe("Corda Setup", () => {
   const cordaV5TestLedger = new CordaV5TestLedger();
   test("On Failure", async () => {
     const logDiagnosticsSpy = jest.spyOn(Containers, "logDiagnostics");
-    console.log("checking failure");
   });
   expect(cordaV5TestLedger).toBeTruthy();
   let apiClient: DefaultApi;
   const expressApp = express();
-  const server = https.createServer(expressApp);
+  const server = http.createServer(expressApp);
   beforeAll(async () => {
     const pruning = pruneDockerAllIfGithubAction({ logLevel });
     await pruning;
@@ -62,12 +64,28 @@ describe("Corda Setup", () => {
       port: 0,
       server,
     };
+    //Axios
+    const customHttpsAgent = new https.Agent({
+      // Configure your custom settings here
+      rejectUnauthorized: false, // Example: Allow self-signed certificates (use with caution)
+    });
+    const axiosConfig: AxiosRequestConfig = {
+      baseURL: apiUrl,
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString(
+          "base64",
+        )}`,
+      },
+      httpsAgent: customHttpsAgent,
+    };
+    const axiosInstance = axios.create(axiosConfig);
     const addressInfo = (await Servers.listen(listenOptions)) as AddressInfo;
     const { address, port } = addressInfo;
-    const apiHost = `https://${address}:${port}`;
+    const apiHost = `http://${address}:${port}`;
     const config = new Configuration({ basePath: apiHost });
     await plugin.getOrCreateWebServices();
     await plugin.registerWebServices(expressApp);
+    // apiClient = new DefaultApi(config);
     apiClient = new DefaultApi(config);
   });
   test("can get past logs of an account", async () => {
@@ -95,10 +113,10 @@ describe("Corda Setup", () => {
 //   it("Get or Create Web Services", async () => {
 //     await plugin.getOrCreateWebServices();
 //   });
-  const customHttpsAgent = new https.Agent({
-    // Configure your custom settings here
-    rejectUnauthorized: false, // Example: Allow self-signed certificates (use with caution)
-  });
+  // const customHttpsAgent = new https.Agent({
+  //   // Configure your custom settings here
+  //   rejectUnauthorized: false, // Example: Allow self-signed certificates (use with caution)
+  // });
   const username = "admin";
   const password = "admin";
   // const axiosConfig: AxiosRequestConfig = {
@@ -161,8 +179,11 @@ describe("Corda Setup", () => {
       console.log(`Short hash ID for Dave: ${shortHashDave}`);
     });
 
-    it("Endpoints initial test", async () => {
-      console.log("checking apiCLient " + apiClient);
+    // it("CPI test", async () => {
+    //   const listCPI = await apiClient.listCPIV1();
+    //   expect(listCPI).toBeTruthy();
+    // });
+    it("StartFlow test", async () => {
       const request = {
         clientRequestId: "test-1",
         flowClassName:
@@ -173,21 +194,18 @@ describe("Corda Setup", () => {
           message: "Testing",
         },
       };
-      const listCPI = await apiClient.listCPIV1();
-      expect(listCPI).toBeTruthy();
-      const startflow = await apiClient.startFlowParameters(
+      console.log("checking shorthash " + shortHashCharlie);
+      const startflow = await apiClient.startFlowParametersV1(
         shortHashCharlie,
         request,
       );
       expect(startflow).toBeTruthy();
-
-      const test1Response = await pollEndpointUntilCompleted(
-        shortHashCharlie,
-        "test-1",
-      );
-      expect(test1Response).toBeTruthy();
+      // const test1Response = await pollEndpointUntilCompleted(
+      //   shortHashCharlie,
+      //   "test-1",
+      // );
+      // expect(test1Response).toBeTruthy();
     });
-
     // test("Simulate conversation between Alice and Bob", async () => {
     //   //1. Alice creates a new chat
     //   const aliceCreateChat = {

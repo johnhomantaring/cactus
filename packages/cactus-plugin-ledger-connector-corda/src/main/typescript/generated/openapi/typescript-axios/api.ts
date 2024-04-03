@@ -1586,11 +1586,11 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startFlowParameters: async (holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        startFlowParametersV1: async (holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'holdingIDShortHash' is not null or undefined
-            assertParamExists('startFlowParameters', 'holdingIDShortHash', holdingIDShortHash)
+            assertParamExists('startFlowParametersV1', 'holdingIDShortHash', holdingIDShortHash)
             // verify required parameter 'startFlowV5Request' is not null or undefined
-            assertParamExists('startFlowParameters', 'startFlowV5Request', startFlowV5Request)
+            assertParamExists('startFlowParametersV1', 'startFlowV5Request', startFlowV5Request)
             const localVarPath = `/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}`
                 .replace(`{${"holdingIDShortHash"}}`, encodeURIComponent(String(holdingIDShortHash)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1821,8 +1821,8 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async startFlowParameters(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowStatusV5Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.startFlowParameters(holdingIDShortHash, startFlowV5Request, options);
+        async startFlowParametersV1(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowStatusV5Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.startFlowParametersV1(holdingIDShortHash, startFlowV5Request, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1971,8 +1971,8 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startFlowParameters(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: any): AxiosPromise<FlowStatusV5Response> {
-            return localVarFp.startFlowParameters(holdingIDShortHash, startFlowV5Request, options).then((request) => request(axios, basePath));
+        startFlowParametersV1(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: any): AxiosPromise<FlowStatusV5Response> {
+            return localVarFp.startFlowParametersV1(holdingIDShortHash, startFlowV5Request, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2141,8 +2141,8 @@ export class DefaultApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public startFlowParameters(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).startFlowParameters(holdingIDShortHash, startFlowV5Request, options).then((request) => request(this.axios, this.basePath));
+    public startFlowParametersV1(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).startFlowParametersV1(holdingIDShortHash, startFlowV5Request, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
