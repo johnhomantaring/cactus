@@ -17,6 +17,7 @@ import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.InvokeC
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.ListFlowsV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.ListFlowsV1Response
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.NodeInfo
+import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartFlowV1Response
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartFlowV5Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartMonitorV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartMonitorV1Response
@@ -67,15 +68,15 @@ interface ApiPluginLedgerConnectorCordaService {
     fun flowStatusResponse(holdingIDShortHash: kotlin.String, clientRequestID: kotlin.String): FlowStatusV5Response
 
     /**
-     * GET /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash} : This method returns an array containing the statuses of all flows running for a specified holding identity. An empty array is returned if there are no flows running.
+     * GET /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash} : This method returns an array containing the statuses of all flows running for a specified holding identity. An empty array is returned if there are no flows running.
      *
      * @param holdingIDShortHash Holding identity short hash (required)
      * @return OK (status code 200)
      *         or Unauthorized (status code 401)
      *         or Forbidden (status code 403)
-     * @see ApiPluginLedgerConnectorCorda#flowStatusResponses
+     * @see ApiPluginLedgerConnectorCorda#getFlowV1
      */
-    fun flowStatusResponses(holdingIDShortHash: kotlin.String): FlowStatusV5Responses
+    fun getFlowV1(holdingIDShortHash: kotlin.String): FlowStatusV5Responses
 
     /**
      * GET /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/get-monitor-transactions : Get transactions for monitored state classes.
@@ -132,14 +133,14 @@ interface ApiPluginLedgerConnectorCordaService {
     fun networkMapV1(body: kotlin.Any?): List<NodeInfo>
 
     /**
-     * POST /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash} : This method starts a new instance for the specified flow for the specified holding identity.
+     * POST /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash} : This method starts a new instance for the specified flow for the specified holding identity.
      *
      * @param holdingIDShortHash Holding identity short hash (required)
      * @param startFlowV5Request Request body for starting a flow (required)
      * @return OK (status code 200)
-     * @see ApiPluginLedgerConnectorCorda#startFlowParametersV1
+     * @see ApiPluginLedgerConnectorCorda#startFlowV1
      */
-    fun startFlowParametersV1(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request): FlowStatusV5Response
+    fun startFlowV1(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request): StartFlowV1Response
 
     /**
      * POST /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/start-monitor : Start monitoring corda changes (transactions) of given state class

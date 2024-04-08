@@ -36,6 +36,7 @@ import org.openapitools.client.models.InvokeContractV1Response
 import org.openapitools.client.models.ListFlowsV1Request
 import org.openapitools.client.models.ListFlowsV1Response
 import org.openapitools.client.models.NodeInfo
+import org.openapitools.client.models.StartFlowV1Response
 import org.openapitools.client.models.StartFlowV5Request
 import org.openapitools.client.models.StartMonitorV1Request
 import org.openapitools.client.models.StartMonitorV1Response
@@ -368,8 +369,8 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun flowStatusResponses(holdingIDShortHash: kotlin.String) : FlowStatusV5Responses {
-        val localVarResponse = flowStatusResponsesWithHttpInfo(holdingIDShortHash = holdingIDShortHash)
+    fun getFlowV1(holdingIDShortHash: kotlin.String) : FlowStatusV5Responses {
+        val localVarResponse = getFlowV1WithHttpInfo(holdingIDShortHash = holdingIDShortHash)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as FlowStatusV5Responses
@@ -396,8 +397,8 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun flowStatusResponsesWithHttpInfo(holdingIDShortHash: kotlin.String) : ApiResponse<FlowStatusV5Responses?> {
-        val localVariableConfig = flowStatusResponsesRequestConfig(holdingIDShortHash = holdingIDShortHash)
+    fun getFlowV1WithHttpInfo(holdingIDShortHash: kotlin.String) : ApiResponse<FlowStatusV5Responses?> {
+        val localVariableConfig = getFlowV1RequestConfig(holdingIDShortHash = holdingIDShortHash)
 
         return request<Unit, FlowStatusV5Responses>(
             localVariableConfig
@@ -405,19 +406,19 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
     }
 
     /**
-     * To obtain the request config of the operation flowStatusResponses
+     * To obtain the request config of the operation getFlowV1
      *
      * @param holdingIDShortHash Holding identity short hash
      * @return RequestConfig
      */
-    fun flowStatusResponsesRequestConfig(holdingIDShortHash: kotlin.String) : RequestConfig<Unit> {
+    fun getFlowV1RequestConfig(holdingIDShortHash: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         
         return RequestConfig(
             method = RequestMethod.GET,
-            path = "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}".replace("{"+"holdingIDShortHash"+"}", encodeURIComponent(holdingIDShortHash.toString())),
+            path = "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}".replace("{"+"holdingIDShortHash"+"}", encodeURIComponent(holdingIDShortHash.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,
@@ -853,7 +854,7 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
      * 
      * @param holdingIDShortHash Holding identity short hash
      * @param startFlowV5Request Request body for starting a flow
-     * @return FlowStatusV5Response
+     * @return StartFlowV1Response
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      * @throws UnsupportedOperationException If the API returns an informational or redirection response
@@ -862,11 +863,11 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun startFlowParametersV1(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : FlowStatusV5Response {
-        val localVarResponse = startFlowParametersV1WithHttpInfo(holdingIDShortHash = holdingIDShortHash, startFlowV5Request = startFlowV5Request)
+    fun startFlowV1(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : StartFlowV1Response {
+        val localVarResponse = startFlowV1WithHttpInfo(holdingIDShortHash = holdingIDShortHash, startFlowV5Request = startFlowV5Request)
 
         return when (localVarResponse.responseType) {
-            ResponseType.Success -> (localVarResponse as Success<*>).data as FlowStatusV5Response
+            ResponseType.Success -> (localVarResponse as Success<*>).data as StartFlowV1Response
             ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
             ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
             ResponseType.ClientError -> {
@@ -885,28 +886,28 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
      * 
      * @param holdingIDShortHash Holding identity short hash
      * @param startFlowV5Request Request body for starting a flow
-     * @return ApiResponse<FlowStatusV5Response?>
+     * @return ApiResponse<StartFlowV1Response?>
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun startFlowParametersV1WithHttpInfo(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : ApiResponse<FlowStatusV5Response?> {
-        val localVariableConfig = startFlowParametersV1RequestConfig(holdingIDShortHash = holdingIDShortHash, startFlowV5Request = startFlowV5Request)
+    fun startFlowV1WithHttpInfo(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : ApiResponse<StartFlowV1Response?> {
+        val localVariableConfig = startFlowV1RequestConfig(holdingIDShortHash = holdingIDShortHash, startFlowV5Request = startFlowV5Request)
 
-        return request<StartFlowV5Request, FlowStatusV5Response>(
+        return request<StartFlowV5Request, StartFlowV1Response>(
             localVariableConfig
         )
     }
 
     /**
-     * To obtain the request config of the operation startFlowParametersV1
+     * To obtain the request config of the operation startFlowV1
      *
      * @param holdingIDShortHash Holding identity short hash
      * @param startFlowV5Request Request body for starting a flow
      * @return RequestConfig
      */
-    fun startFlowParametersV1RequestConfig(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : RequestConfig<StartFlowV5Request> {
+    fun startFlowV1RequestConfig(holdingIDShortHash: kotlin.String, startFlowV5Request: StartFlowV5Request) : RequestConfig<StartFlowV5Request> {
         val localVariableBody = startFlowV5Request
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -915,7 +916,7 @@ class DefaultApi(basePath: kotlin.String = defaultBasePath, client: OkHttpClient
 
         return RequestConfig(
             method = RequestMethod.POST,
-            path = "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}".replace("{"+"holdingIDShortHash"+"}", encodeURIComponent(holdingIDShortHash.toString())),
+            path = "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}".replace("{"+"holdingIDShortHash"+"}", encodeURIComponent(holdingIDShortHash.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = false,

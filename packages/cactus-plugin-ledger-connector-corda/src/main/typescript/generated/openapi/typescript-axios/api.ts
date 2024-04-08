@@ -1054,6 +1054,55 @@ export interface SHA256 {
     'size': number;
 }
 /**
+ * 
+ * @export
+ * @interface StartFlowV1Response
+ */
+export interface StartFlowV1Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof StartFlowV1Response
+     */
+    'clientRequestId'?: string | null;
+    /**
+     * 
+     * @type {FlowV5Error}
+     * @memberof StartFlowV1Response
+     */
+    'flowError'?: FlowV5Error;
+    /**
+     * 
+     * @type {string}
+     * @memberof StartFlowV1Response
+     */
+    'flowId'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof StartFlowV1Response
+     */
+    'flowResult'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof StartFlowV1Response
+     */
+    'flowStatus': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StartFlowV1Response
+     */
+    'holdingIDShortHash': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StartFlowV1Response
+     */
+    'timestamp': string;
+}
+/**
  * This method starts a new instance for the specified flow for the specified holding identity.
  * @export
  * @interface StartFlowV5Request
@@ -1357,10 +1406,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        flowStatusResponses: async (holdingIDShortHash: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getFlowV1: async (holdingIDShortHash: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'holdingIDShortHash' is not null or undefined
-            assertParamExists('flowStatusResponses', 'holdingIDShortHash', holdingIDShortHash)
-            const localVarPath = `/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}`
+            assertParamExists('getFlowV1', 'holdingIDShortHash', holdingIDShortHash)
+            const localVarPath = `/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}`
                 .replace(`{${"holdingIDShortHash"}}`, encodeURIComponent(String(holdingIDShortHash)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1586,12 +1635,12 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startFlowParametersV1: async (holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        startFlowV1: async (holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'holdingIDShortHash' is not null or undefined
-            assertParamExists('startFlowParametersV1', 'holdingIDShortHash', holdingIDShortHash)
+            assertParamExists('startFlowV1', 'holdingIDShortHash', holdingIDShortHash)
             // verify required parameter 'startFlowV5Request' is not null or undefined
-            assertParamExists('startFlowParametersV1', 'startFlowV5Request', startFlowV5Request)
-            const localVarPath = `/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}`
+            assertParamExists('startFlowV1', 'startFlowV5Request', startFlowV5Request)
+            const localVarPath = `/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}`
                 .replace(`{${"holdingIDShortHash"}}`, encodeURIComponent(String(holdingIDShortHash)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1747,8 +1796,8 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async flowStatusResponses(holdingIDShortHash: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowStatusV5Responses>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.flowStatusResponses(holdingIDShortHash, options);
+        async getFlowV1(holdingIDShortHash: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowStatusV5Responses>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getFlowV1(holdingIDShortHash, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1821,8 +1870,8 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async startFlowParametersV1(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowStatusV5Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.startFlowParametersV1(holdingIDShortHash, startFlowV5Request, options);
+        async startFlowV1(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StartFlowV1Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.startFlowV1(holdingIDShortHash, startFlowV5Request, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1904,8 +1953,8 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        flowStatusResponses(holdingIDShortHash: string, options?: any): AxiosPromise<FlowStatusV5Responses> {
-            return localVarFp.flowStatusResponses(holdingIDShortHash, options).then((request) => request(axios, basePath));
+        getFlowV1(holdingIDShortHash: string, options?: any): AxiosPromise<FlowStatusV5Responses> {
+            return localVarFp.getFlowV1(holdingIDShortHash, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1971,8 +2020,8 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startFlowParametersV1(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: any): AxiosPromise<FlowStatusV5Response> {
-            return localVarFp.startFlowParametersV1(holdingIDShortHash, startFlowV5Request, options).then((request) => request(axios, basePath));
+        startFlowV1(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: any): AxiosPromise<StartFlowV1Response> {
+            return localVarFp.startFlowV1(holdingIDShortHash, startFlowV5Request, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2060,8 +2109,8 @@ export class DefaultApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public flowStatusResponses(holdingIDShortHash: string, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).flowStatusResponses(holdingIDShortHash, options).then((request) => request(this.axios, this.basePath));
+    public getFlowV1(holdingIDShortHash: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getFlowV1(holdingIDShortHash, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2141,8 +2190,8 @@ export class DefaultApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public startFlowParametersV1(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).startFlowParametersV1(holdingIDShortHash, startFlowV5Request, options).then((request) => request(this.axios, this.basePath));
+    public startFlowV1(holdingIDShortHash: string, startFlowV5Request: StartFlowV5Request, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).startFlowV1(holdingIDShortHash, startFlowV5Request, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

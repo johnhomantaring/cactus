@@ -17,6 +17,7 @@ import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.InvokeC
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.ListFlowsV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.ListFlowsV1Response
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.NodeInfo
+import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartFlowV1Response
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartFlowV5Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartMonitorV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartMonitorV1Response
@@ -95,11 +96,11 @@ class ApiPluginLedgerConnectorCordaController(@Autowired(required = true) val se
 
     @RequestMapping(
         method = [RequestMethod.GET],
-        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"],
+        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}"],
         produces = ["text/plain"]
     )
-    fun flowStatusResponses( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String): ResponseEntity<FlowStatusV5Responses> {
-        return ResponseEntity(service.flowStatusResponses(holdingIDShortHash), HttpStatus.valueOf(200))
+    fun getFlowV1( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String): ResponseEntity<FlowStatusV5Responses> {
+        return ResponseEntity(service.getFlowV1(holdingIDShortHash), HttpStatus.valueOf(200))
     }
 
 
@@ -169,12 +170,12 @@ class ApiPluginLedgerConnectorCordaController(@Autowired(required = true) val se
 
     @RequestMapping(
         method = [RequestMethod.POST],
-        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"],
+        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}"],
         produces = ["application/json"],
         consumes = ["application/json"]
     )
-    fun startFlowParametersV1( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String, @Valid @RequestBody startFlowV5Request: StartFlowV5Request): ResponseEntity<FlowStatusV5Response> {
-        return ResponseEntity(service.startFlowParametersV1(holdingIDShortHash, startFlowV5Request), HttpStatus.valueOf(200))
+    fun startFlowV1( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String, @Valid @RequestBody startFlowV5Request: StartFlowV5Request): ResponseEntity<StartFlowV1Response> {
+        return ResponseEntity(service.startFlowV1(holdingIDShortHash, startFlowV5Request), HttpStatus.valueOf(200))
     }
 
 

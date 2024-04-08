@@ -46,6 +46,7 @@ describe("Corda Setup", () => {
   let apiClient: DefaultApi;
   const expressApp = express();
   const server = http.createServer(expressApp);
+  let plugin: PluginLedgerConnectorCorda;
   beforeAll(async () => {
     const pruning = pruneDockerAllIfGithubAction({ logLevel });
     await pruning;
@@ -64,28 +65,12 @@ describe("Corda Setup", () => {
       port: 0,
       server,
     };
-    //Axios
-    const customHttpsAgent = new https.Agent({
-      // Configure your custom settings here
-      rejectUnauthorized: false, // Example: Allow self-signed certificates (use with caution)
-    });
-    const axiosConfig: AxiosRequestConfig = {
-      baseURL: apiUrl,
-      headers: {
-        Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString(
-          "base64",
-        )}`,
-      },
-      httpsAgent: customHttpsAgent,
-    };
-    const axiosInstance = axios.create(axiosConfig);
     const addressInfo = (await Servers.listen(listenOptions)) as AddressInfo;
     const { address, port } = addressInfo;
     const apiHost = `http://${address}:${port}`;
     const config = new Configuration({ basePath: apiHost });
-    await plugin.getOrCreateWebServices();
+    // await plugin.getOrCreateWebServices();
     await plugin.registerWebServices(expressApp);
-    // apiClient = new DefaultApi(config);
     apiClient = new DefaultApi(config);
   });
   test("can get past logs of an account", async () => {
@@ -97,40 +82,6 @@ describe("Corda Setup", () => {
     await cordaV5TestLedger.destroy();
     await Servers.shutdown(server);
   });
-  let plugin: PluginLedgerConnectorCorda;
-//   it("Get sshConfig", async () => {
-//     const sshConfig = await cordaV5TestLedger.getSshConfig();
-//     plugin = new PluginLedgerConnectorCorda({
-//       instanceId: uuidv4(),
-//       sshConfigAdminShell: sshConfig,
-//       corDappsDir: "",
-//       logLevel,
-//       cordaVersion: CordaVersion.CORDA_V5,
-//       apiUrl: "https://127.0.0.1:8888",
-//     });
-//   });
-  const apiUrl = "https://127.0.0.1:8888";
-//   it("Get or Create Web Services", async () => {
-//     await plugin.getOrCreateWebServices();
-//   });
-  // const customHttpsAgent = new https.Agent({
-  //   // Configure your custom settings here
-  //   rejectUnauthorized: false, // Example: Allow self-signed certificates (use with caution)
-  // });
-  const username = "admin";
-  const password = "admin";
-  // const axiosConfig: AxiosRequestConfig = {
-  //   baseURL: apiUrl,
-  //   headers: {
-  //     Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString(
-  //       "base64",
-  //     )}`,
-  //   },
-  //   httpsAgent: customHttpsAgent,
-  // };
-
-  // const axiosInstance = axios.create(axiosConfig);
-  // const apiClient = new DefaultApi(undefined, apiUrl, axiosInstance);
   let shortHashID: string;
   it("Get container", async () => {
     const container = cordaV5TestLedger.getContainer();
@@ -195,10 +146,7 @@ describe("Corda Setup", () => {
         },
       };
       console.log("checking shorthash " + shortHashCharlie);
-      const startflow = await apiClient.startFlowParametersV1(
-        shortHashCharlie,
-        request,
-      );
+      const startflow = await apiClient.startFlowV1(shortHashCharlie, request);
       expect(startflow).toBeTruthy();
       // const test1Response = await pollEndpointUntilCompleted(
       //   shortHashCharlie,

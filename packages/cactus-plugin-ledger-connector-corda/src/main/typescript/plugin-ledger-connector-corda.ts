@@ -65,7 +65,10 @@ import {
   IDiagnoseNodeEndpointV1Options,
   DiagnoseNodeEndpointV1,
 } from "./web-services/diagnose-node-endpoint-v1";
-
+import {
+  IStartFlowEndpointV1Options,
+  StartFlowEndpointV1,
+} from "./web-services/start-flow-endpoint-v1";
 import fs from "fs";
 import fetch, { Headers } from "node-fetch";
 import https from "https";
@@ -303,9 +306,18 @@ export class PluginLedgerConnectorCorda
       const endpoint = new FlowStatusResponseEndpointV1(opts);
       endpoints.push(endpoint);
     }
+    {
+      const opts: IStartFlowEndpointV1Options = {
+        apiUrl: this.options.apiUrl,
+        logLevel: this.options.logLevel,
+        holdingIDShortHash: this.options.holdingIDShortHash,
+        connector: this,
+      };
+      const endpoint = new StartFlowEndpointV1(opts);
+      endpoints.push(endpoint);
+    }
     this.log.info(`Instantiated endpoints of ${pkgName}`);
     return endpoints;
-    console.log(endpoints);
   }
 
   public async shutdown(): Promise<void> {
@@ -368,6 +380,37 @@ export class PluginLedgerConnectorCorda
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+  public async getFlow(holdingshortHashID: string): Promise<any> {
+    const fnTag = `${this.className}#startFlowV5Request()`;
+    this.log.debug("%s ENTER", fnTag);
+    const username = "admin";
+    const password = "admin";
+    const authString = Buffer.from(`${username}:${password}`).toString(
+      "base64",
+    );
+    const headers = {
+      Authorization: `Basic ${authString}`,
+    };
+    const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+    try {
+      const response = await fetch(
+        "https://127.0.0.1:8888/api/v1/flow/" + holdingshortHashID,
+        {
+          method: `GET`,
+          headers: headers,
+          agent: httpsAgent,
+        },
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      console.log("Response:", responseData);
       return responseData;
     } catch (error) {
       console.error("Error fetching data:", error);

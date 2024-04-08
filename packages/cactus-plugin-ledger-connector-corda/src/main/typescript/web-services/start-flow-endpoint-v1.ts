@@ -27,30 +27,30 @@ import {
 import OAS from "../../json/openapi.json";
 import { PluginLedgerConnectorCorda } from "../plugin-ledger-connector-corda";
 
-export interface IFlowStatusEndpointV1Options {
+export interface IStartFlowEndpointV1Options {
   logLevel?: LogLevelDesc;
   apiUrl?: string;
   holdingIDShortHash: string;
   connector: PluginLedgerConnectorCorda;
 }
 
-export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
-  public static readonly CLASS_NAME = "FlowStatusEndpointV1";
+export class StartFlowEndpointV1 implements IWebServiceEndpoint {
+  public static readonly CLASS_NAME = "StartFlowEndpointV1";
 
   private readonly log: Logger;
   private readonly apiUrl?: string;
 
   public get className(): string {
-    return FlowStatusEndpointV1.CLASS_NAME;
+    return StartFlowEndpointV1.CLASS_NAME;
   }
 
-  constructor(public readonly options: IFlowStatusEndpointV1Options) {
+  constructor(public readonly options: IStartFlowEndpointV1Options) {
     const fnTag = `${this.className}#constructor()`;
 
     Checks.truthy(options, `${fnTag} options`);
     Checks.truthy(options.connector, `${fnTag} options.connector`);
     this.log = LoggerProvider.getOrCreate({
-      label: "list-flow-status-endpoint-v1",
+      label: "start-flow-endpoint-v1",
       level: options.logLevel || "INFO",
     });
 
@@ -66,9 +66,9 @@ export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
     };
   }
 
-  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}"] {
+  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}"] {
     return OAS.paths[
-      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}"
+      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}"
     ];
   }
 
@@ -77,15 +77,15 @@ export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
    * API server of Cactus.
    */
   public getPath(): string {
-    return this.oasPath.get["x-hyperledger-cactus"].http.path;
+    return this.oasPath.post["x-hyperledger-cactus"].http.path;
   }
 
   public getVerbLowerCase(): string {
-    return this.oasPath.get["x-hyperledger-cactus"].http.verbLowerCase;
+    return this.oasPath.post["x-hyperledger-cactus"].http.verbLowerCase;
   }
 
   public getOperationId(): string {
-    return this.oasPath.get.operationId;
+    return this.oasPath.post.operationId;
   }
 
   public getExpressRequestHandler(): IExpressRequestHandler {
@@ -99,7 +99,7 @@ export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
     return this;
   }
   async handleRequest(req: Request, res: Response): Promise<void> {
-    const fnTag = "FlowStatusEndpointV1#handleRequest()";
+    const fnTag = "StartFlowV1#handleRequest()";
     this.log.debug(`POST ${this.getPath()}`);
     try {
       if (this.apiUrl === undefined) throw "apiUrl option is necessary";

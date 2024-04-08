@@ -1065,6 +1065,46 @@
           }
         }
     },
+    "StartFlowV1Response": {
+      "type": "object",
+      "required": ["flowStatus", "holdingIDShortHash", "timestamp"],
+      "properties": {   
+          "clientRequestId": {
+            "type": "string",
+            "nullable": true,
+            "example": "string"
+          },
+          "flowError": {
+              "$ref": "#/components/schemas/FlowV5Error"
+          },
+          "flowId": {
+            "type": "string",
+            "nullable": true,
+            "example": "string"
+          },
+          "flowResult": {
+            "type": "string",
+            "nullable": true,
+            "example": "string"
+          },
+          "flowStatus": {
+            "type": "string",
+            "nullable": false,
+            "example": "string"
+          },
+          "holdingIDShortHash": {
+            "type": "string",
+            "nullable": false,
+            "example": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": false,
+            "example": "2022-06-24T10:15:30Z"
+          }
+      }
+  },
     "CPIIDV5":{
         "type": "object",
         "required": ["name", "version"],
@@ -1469,16 +1509,16 @@
               }
           }
       }
-  },
-  "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}": {
+    },
+    "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}": {
       "get": {
           "x-hyperledger-cactus": {
               "http": {
                   "verbLowerCase": "get",
-                  "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"
+                  "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}"
               }
           },
-          "operationId": "flowStatusResponses",
+          "operationId": "getFlowV1",
           "summary": "This method returns an array containing the statuses of all flows running for a specified holding identity. An empty array is returned if there are no flows running.",
           "parameters": [
               {
@@ -1509,53 +1549,9 @@
                   "description": "Forbidden" 
               }
           }
-      },
-      "post": {
-          "x-hyperledger-cactus": {
-              "http": {
-                  "verbLowerCase": "post",
-                  "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}"
-              }
-          },
-          "operationId": "startFlowParametersV1",
-          "summary": "This method starts a new instance for the specified flow for the specified holding identity.",
-          "requestBody": {
-              "description": "Request body for starting a flow",
-              "required": true,
-              "content": {
-                  "application/json": {
-                    "schema": {
-                      "$ref": "#/components/schemas/StartFlowV5Request"
-                    }
-                  }
-              }
-          },
-          "parameters": [
-              {
-                "name": "holdingIDShortHash",
-                "in": "path",
-                "required": true,
-                "description": "Holding identity short hash",
-                "schema": {
-                  "type": "string"
-                }
-              }
-          ],
-          "responses": {
-              "200": {
-                  "description": "OK",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "$ref": "#/components/schemas/FlowStatusV5Response"
-                          }
-                      }
-                  }
-              }
-          }
       }
-  },
-  "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}": {
+    },
+    "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}": {
       "get": {
           "x-hyperledger-cactus": {
               "http": {
@@ -1601,6 +1597,52 @@
               },
               "403": {
                   "description": "Forbidden" 
+              }
+          }
+      }
+    },
+    "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}": {
+      "post": {
+          "x-hyperledger-cactus": {
+              "http": {
+                  "verbLowerCase": "post",
+                  "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}"
+              }
+          },
+          "operationId": "startFlowV1",
+          "summary": "This method starts a new instance for the specified flow for the specified holding identity.",
+          "requestBody": {
+              "description": "Request body for starting a flow",
+              "required": true,
+              "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/StartFlowV5Request"
+                    }
+                  }
+              }
+          },
+          "parameters": [
+              {
+                "name": "holdingIDShortHash",
+                "in": "path",
+                "required": true,
+                "description": "Holding identity short hash",
+                "schema": {
+                  "type": "string"
+                }
+              }
+          ],
+          "responses": {
+              "200": {
+                  "description": "OK",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/StartFlowV1Response"
+                          }
+                      }
+                  }
               }
           }
       }

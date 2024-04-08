@@ -59,6 +59,7 @@ src/main/kotlin/org/openapitools/client/models/NodeInfo.kt
 src/main/kotlin/org/openapitools/client/models/Party.kt
 src/main/kotlin/org/openapitools/client/models/PublicKey.kt
 src/main/kotlin/org/openapitools/client/models/SHA256.kt
+src/main/kotlin/org/openapitools/client/models/StartFlowV1Response.kt
 src/main/kotlin/org/openapitools/client/models/StartFlowV5Request.kt
 src/main/kotlin/org/openapitools/client/models/StartFlowV5RequestRequestBody.kt
 src/main/kotlin/org/openapitools/client/models/StartMonitorV1Request.kt

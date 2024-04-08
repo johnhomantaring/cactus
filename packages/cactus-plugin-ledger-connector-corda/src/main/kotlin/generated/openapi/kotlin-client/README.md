@@ -48,14 +48,14 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**deployContractJarsV1**](docs/DefaultApi.md#deploycontractjarsv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/deploy-contract-jars | Deploys a set of jar files (Cordapps, e.g. the contracts in Corda speak).
 *DefaultApi* | [**diagnoseNodeV1**](docs/DefaultApi.md#diagnosenodev1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/diagnose-node | 
 *DefaultApi* | [**flowStatusResponse**](docs/DefaultApi.md#flowstatusresponse) | **GET** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID} | This method gets the current status of the specified flow instance.
-*DefaultApi* | [**flowStatusResponses**](docs/DefaultApi.md#flowstatusresponses) | **GET** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash} | This method returns an array containing the statuses of all flows running for a specified holding identity. An empty array is returned if there are no flows running.
+*DefaultApi* | [**getFlowV1**](docs/DefaultApi.md#getflowv1) | **GET** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash} | This method returns an array containing the statuses of all flows running for a specified holding identity. An empty array is returned if there are no flows running.
 *DefaultApi* | [**getMonitorTransactionsV1**](docs/DefaultApi.md#getmonitortransactionsv1) | **GET** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/get-monitor-transactions | Get transactions for monitored state classes.
 *DefaultApi* | [**getPrometheusMetricsV1**](docs/DefaultApi.md#getprometheusmetricsv1) | **GET** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/get-prometheus-exporter-metrics | Get the Prometheus Metrics
 *DefaultApi* | [**invokeContractV1**](docs/DefaultApi.md#invokecontractv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/invoke-contract | Invokes a contract on a Corda ledger (e.g. a flow)
 *DefaultApi* | [**listCPIV1**](docs/DefaultApi.md#listcpiv1) | **GET** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listCPI | List all CPIs uploaded to the cluster
 *DefaultApi* | [**listFlowsV1**](docs/DefaultApi.md#listflowsv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/list-flows | 
 *DefaultApi* | [**networkMapV1**](docs/DefaultApi.md#networkmapv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/network-map | 
-*DefaultApi* | [**startFlowParametersV1**](docs/DefaultApi.md#startflowparametersv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash} | This method starts a new instance for the specified flow for the specified holding identity.
+*DefaultApi* | [**startFlowV1**](docs/DefaultApi.md#startflowv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash} | This method starts a new instance for the specified flow for the specified holding identity.
 *DefaultApi* | [**startMonitorV1**](docs/DefaultApi.md#startmonitorv1) | **POST** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/start-monitor | Start monitoring corda changes (transactions) of given state class
 *DefaultApi* | [**stopMonitorV1**](docs/DefaultApi.md#stopmonitorv1) | **DELETE** /api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/stop-monitor | Stop monitoring corda changes (transactions) of given state class
 
@@ -101,6 +101,7 @@ Class | Method | HTTP request | Description
  - [org.openapitools.client.models.Party](docs/Party.md)
  - [org.openapitools.client.models.PublicKey](docs/PublicKey.md)
  - [org.openapitools.client.models.SHA256](docs/SHA256.md)
+ - [org.openapitools.client.models.StartFlowV1Response](docs/StartFlowV1Response.md)
  - [org.openapitools.client.models.StartFlowV5Request](docs/StartFlowV5Request.md)
  - [org.openapitools.client.models.StartFlowV5RequestRequestBody](docs/StartFlowV5RequestRequestBody.md)
  - [org.openapitools.client.models.StartMonitorV1Request](docs/StartMonitorV1Request.md)
