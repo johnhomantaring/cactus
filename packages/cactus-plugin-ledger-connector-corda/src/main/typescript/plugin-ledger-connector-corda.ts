@@ -1,15 +1,14 @@
 import { Server } from "http";
 import { Server as SecureServer } from "https";
 import { Config as SshConfig } from "node-ssh";
-import { Express, application, response, urlencoded } from "express";
+import { Express } from "express";
 
 import OAS from "../json/openapi.json";
 import {
-  DefaultApi,
-  CPIV5Response,
-  DefaultApiAxiosParamCreator,
-  StartFlowV5Request,
-  FlowStatusV5Response,
+  CPIV1Response,
+  StartFlowV1Request,
+  FlowStatusV1Response,
+  GetFlowV1Request,
 } from "./generated/openapi/typescript-axios";
 
 import {
@@ -18,7 +17,6 @@ import {
   IPluginWebService,
   ICactusPluginOptions,
   ConsensusAlgorithmFamily,
-  Configuration,
 } from "@hyperledger/cactus-core-api";
 import { consensusHasTransactionFinality } from "@hyperledger/cactus-core";
 import {
@@ -70,9 +68,8 @@ import {
   StartFlowEndpointV1,
 } from "./web-services/start-flow-endpoint-v1";
 import fs from "fs";
-import fetch, { Headers } from "node-fetch";
+import fetch from "node-fetch";
 import https from "https";
-import bodyParser from "body-parser";
 export enum CordaVersion {
   CORDA_V4X = "CORDA_V4X",
   CORDA_V5 = "CORDA_V5",
@@ -101,20 +98,18 @@ export interface IPluginLedgerConnectorCordaOptions
 export class PluginLedgerConnectorCorda
   implements
     IPluginLedgerConnector<
-      FlowStatusV5Response,
-      StartFlowV5Request,
-      CPIV5Response,
+      FlowStatusV1Response,
+      StartFlowV1Request,
+      CPIV1Response,
       any
     >,
     IPluginWebService
 {
-  //add here implement similar to transact connector-fabric,
   public static readonly CLASS_NAME = "DeployContractJarsEndpoint";
 
   private readonly instanceId: string;
   private readonly log: Logger;
   public prometheusExporter: PrometheusExporter;
-  // need to add checking if v4 or v5 and what to deploy
   private endpoints: IWebServiceEndpoint[] | undefined;
 
   public get className(): string {
@@ -310,7 +305,6 @@ export class PluginLedgerConnectorCorda
       const opts: IStartFlowEndpointV1Options = {
         apiUrl: this.options.apiUrl,
         logLevel: this.options.logLevel,
-        holdingIDShortHash: this.options.holdingIDShortHash,
         connector: this,
       };
       const endpoint = new StartFlowEndpointV1(opts);
@@ -327,54 +321,55 @@ export class PluginLedgerConnectorCorda
   public async getFlowList(): Promise<string[]> {
     return ["getFlowList()_NOT_IMPLEMENTED"];
   }
-  public async startFlow(holdingshortHashID: string, req: any): Promise<any> {
-    const fnTag = `${this.className}#startFlowV5Request()`;
-    this.log.debug("%s ENTER", fnTag);
-    const username = "admin";
-    const password = "admin";
-    const authString = Buffer.from(`${username}:${password}`).toString(
-      "base64",
-    );
-    const headers = {
-      Authorization: `Basic ${authString}`,
-    };
+
+  private username: string = "admin";
+  private password: string = "admin";
+  private baseURL: string = "https://127.0.0.1:8888/api/v1/";
+  private async setupRequest(): Promise<{ headers: any; agent: any }> {
+    const authString = Buffer.from(
+      `${this.username}:${this.password}`,
+    ).toString("base64");
+    const headers = { Authorization: `Basic ${authString}` };
     const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+    return { headers, agent: httpsAgent };
+  }
+
+  public async startFlow(req: StartFlowV1Request): Promise<any> {
     try {
+      const { headers, agent } = await this.setupRequest();
+      const holdingIDShortHash = req.holdingIDShortHash;
+      const cordaReq = {
+        clientRequestId: req.clientRequestId,
+        flowClassName: req.flowClassName,
+        requestBody: req.requestBody,
+      };
+      const cordaReqBuff = Buffer.from(JSON.stringify(cordaReq));
       const response = await fetch(
-        "https://127.0.0.1:8888/api/v1/flow/" + holdingshortHashID,
+        `${this.baseURL}flow/${holdingIDShortHash}`,
         {
           method: `POST`,
-          headers: headers,
-          body: req,
-          agent: httpsAgent,
+          headers,
+          body: cordaReqBuff,
+          agent,
         },
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const responseData = await response.json();
-      console.log("Response:", responseData);
-      return responseData;
+      return await response.json();
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error starting flow:", error);
+      throw error;
     }
   }
 
   public async listCPI(): Promise<any> {
-    const username = "admin";
-    const password = "admin";
-    const authString = Buffer.from(`${username}:${password}`).toString(
-      "base64",
-    );
-    const headers = {
-      Authorization: `Basic ${authString}`,
-    };
-    const httpsAgent = new https.Agent({ rejectUnauthorized: false });
     try {
-      const response = await fetch("https://127.0.0.1:8888/api/v1/cpi", {
+      const { headers, agent } = await this.setupRequest();
+      const response = await fetch(`${this.baseURL}cpi`, {
         method: `GET`,
         headers: headers,
-        agent: httpsAgent,
+        agent,
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -385,32 +380,44 @@ export class PluginLedgerConnectorCorda
       console.error("Error fetching data:", error);
     }
   }
-  public async getFlow(holdingshortHashID: string): Promise<any> {
-    const fnTag = `${this.className}#startFlowV5Request()`;
-    this.log.debug("%s ENTER", fnTag);
-    const username = "admin";
-    const password = "admin";
-    const authString = Buffer.from(`${username}:${password}`).toString(
-      "base64",
-    );
-    const headers = {
-      Authorization: `Basic ${authString}`,
-    };
-    const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+  public async getFlow(req: GetFlowV1Request): Promise<any> {
     try {
+      const { headers, agent } = await this.setupRequest();
+      const holdingIDShortHash = req.holdingIDShortHash;
+      const clientRequestId = req.clientRequestId;
       const response = await fetch(
-        "https://127.0.0.1:8888/api/v1/flow/" + holdingshortHashID,
+        `${this.baseURL}flow/${holdingIDShortHash}/${clientRequestId}`,
         {
           method: `GET`,
           headers: headers,
-          agent: httpsAgent,
+          agent,
         },
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const responseData = await response.json();
-      console.log("Response:", responseData);
+      return responseData;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+  public async listFlows(req: GetFlowV1Request): Promise<any> {
+    try {
+      const { headers, agent } = await this.setupRequest();
+      const holdingIDShortHash = req.holdingIDShortHash;
+      const response = await fetch(
+        `${this.baseURL}flow/${holdingIDShortHash}`,
+        {
+          method: `GET`,
+          headers: headers,
+          agent,
+        },
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const responseData = await response.json();
       return responseData;
     } catch (error) {
       console.error("Error fetching data:", error);

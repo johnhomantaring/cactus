@@ -15,7 +15,6 @@
 
 package org.openapitools.client.models
 
-import org.openapitools.client.models.FlowStatusV5ResponsesFlowStatusResponsesInner
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -23,14 +22,22 @@ import com.squareup.moshi.JsonClass
 /**
  * 
  *
- * @param flowStatusResponses 
+ * @param name 
+ * @param version 
+ * @param signerSummaryHash 
  */
 
 
-data class FlowStatusV5Responses (
+data class CPIIDV1 (
 
-    @Json(name = "flowStatusResponses")
-    val flowStatusResponses: kotlin.collections.List<FlowStatusV5ResponsesFlowStatusResponsesInner>? = null
+    @Json(name = "name")
+    val name: kotlin.String,
+
+    @Json(name = "version")
+    val version: kotlin.String,
+
+    @Json(name = "signerSummaryHash")
+    val signerSummaryHash: kotlin.String? = null
 
 )
 

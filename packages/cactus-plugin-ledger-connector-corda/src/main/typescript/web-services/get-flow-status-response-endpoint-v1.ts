@@ -4,7 +4,6 @@ import {
   IWebServiceEndpoint,
   IExpressRequestHandler,
   IEndpointAuthzOptions,
-  Configuration,
 } from "@hyperledger/cactus-core-api";
 
 import { registerWebServiceEndpoint } from "@hyperledger/cactus-core";
@@ -16,11 +15,6 @@ import {
   LoggerProvider,
   LogLevelDesc,
 } from "@hyperledger/cactus-common";
-
-import {
-  DefaultApi,
-  FlowStatusV5Response,
-} from "../generated/openapi/typescript-axios";
 
 import OAS from "../../json/openapi.json";
 import { PluginLedgerConnectorCorda } from "../plugin-ledger-connector-corda";
@@ -65,9 +59,9 @@ export class FlowStatusResponseEndpointV1 implements IWebServiceEndpoint {
     };
   }
 
-  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}"] {
+  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlowCID"] {
     return OAS.paths[
-      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}"
+      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlowCID"
     ];
   }
 
@@ -99,13 +93,12 @@ export class FlowStatusResponseEndpointV1 implements IWebServiceEndpoint {
   }
 
   async handleRequest(req: Request, res: Response): Promise<void> {
-    const fnTag = "sFlowStatusResponseEndpointV1#constructor()";
+    const fnTag = "getFlowV1#handleRequest()";
     const verbUpper = this.getVerbLowerCase().toUpperCase();
     this.log.debug(`${verbUpper} ${this.getPath()}`);
-
     try {
       if (this.apiUrl === undefined) throw "apiUrl option is necessary";
-      const body = await this.callInternalContainer(req.body);
+      const body = await this.options.connector.getFlow(req.body);
       res.status(200);
       res.json(body);
     } catch (ex) {
@@ -114,17 +107,5 @@ export class FlowStatusResponseEndpointV1 implements IWebServiceEndpoint {
       res.statusMessage = ex.message;
       res.json({ error: ex.stack });
     }
-  }
-
-  // to remove
-  async callInternalContainer(req: any): Promise<FlowStatusV5Response> {
-    const apiConfig = new Configuration({ basePath: this.apiUrl });
-    const apiClient = new DefaultApi(apiConfig);
-    const res = await apiClient.flowStatusResponse(
-      this.options.holdingIDShortHash,
-      this.options.clientRequestID,
-      req,
-    );
-    return res.data;
   }
 }

@@ -15,8 +15,8 @@
 
 package org.openapitools.client.models
 
-import org.openapitools.client.models.CPIIDV5
-import org.openapitools.client.models.CPIV5ResponseCpisInnerCpksInner
+import org.openapitools.client.models.CPIIDV1
+import org.openapitools.client.models.CPIV1ResponseCpisInnerCpksInner
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -33,7 +33,7 @@ import com.squareup.moshi.JsonClass
  */
 
 
-data class CPIV5ResponseCpisInner (
+data class CPIV1ResponseCpisInner (
 
     @Json(name = "cpiFileChecksum")
     val cpiFileChecksum: kotlin.String? = null,
@@ -42,13 +42,13 @@ data class CPIV5ResponseCpisInner (
     val cpiFileFullChecksum: kotlin.String? = null,
 
     @Json(name = "cpks")
-    val cpks: kotlin.collections.List<CPIV5ResponseCpisInnerCpksInner>? = null,
+    val cpks: kotlin.collections.List<CPIV1ResponseCpisInnerCpksInner>? = null,
 
     @Json(name = "groupPolicy")
     val groupPolicy: kotlin.String? = null,
 
     @Json(name = "id")
-    val id: CPIIDV5? = null,
+    val id: CPIIDV1? = null,
 
     @Json(name = "timestamp")
     val timestamp: java.time.OffsetDateTime? = null

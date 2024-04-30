@@ -1,6 +1,6 @@
 package org.hyperledger.cactus.plugin.ledger.connector.corda.server.api
 
-import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.CPIV5Response
+import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.CPIV1Response
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.ClearMonitorTransactionsV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.ClearMonitorTransactionsV1Response
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.DeployContractJarsBadRequestV1Response
@@ -8,8 +8,9 @@ import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.DeployC
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.DeployContractJarsV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.DiagnoseNodeV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.DiagnoseNodeV1Response
-import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.FlowStatusV5Response
-import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.FlowStatusV5Responses
+import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.FlowStatusV1Response
+import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.FlowStatusV1Responses
+import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.GetFlowV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.GetMonitorTransactionsV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.GetMonitorTransactionsV1Response
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.InvokeContractV1Request
@@ -17,8 +18,8 @@ import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.InvokeC
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.ListFlowsV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.ListFlowsV1Response
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.NodeInfo
+import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartFlowV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartFlowV1Response
-import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartFlowV5Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartMonitorV1Request
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartMonitorV1Response
 import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StopMonitorV1Request
@@ -86,21 +87,12 @@ class ApiPluginLedgerConnectorCordaController(@Autowired(required = true) val se
 
     @RequestMapping(
         method = [RequestMethod.GET],
-        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}"],
-        produces = ["text/plain"]
+        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlowCID"],
+        produces = ["text/plain"],
+        consumes = ["application/json"]
     )
-    fun flowStatusResponse( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String, @PathVariable("clientRequestID") clientRequestID: kotlin.String): ResponseEntity<FlowStatusV5Response> {
-        return ResponseEntity(service.flowStatusResponse(holdingIDShortHash, clientRequestID), HttpStatus.valueOf(200))
-    }
-
-
-    @RequestMapping(
-        method = [RequestMethod.GET],
-        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}"],
-        produces = ["text/plain"]
-    )
-    fun getFlowV1( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String): ResponseEntity<FlowStatusV5Responses> {
-        return ResponseEntity(service.getFlowV1(holdingIDShortHash), HttpStatus.valueOf(200))
+    fun getFlowV1( @Valid @RequestBody getFlowV1Request: GetFlowV1Request): ResponseEntity<FlowStatusV1Response> {
+        return ResponseEntity(service.getFlowV1(getFlowV1Request), HttpStatus.valueOf(200))
     }
 
 
@@ -141,8 +133,19 @@ class ApiPluginLedgerConnectorCordaController(@Autowired(required = true) val se
         value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listCPI"],
         produces = ["application/json"]
     )
-    fun listCPIV1(): ResponseEntity<CPIV5Response> {
+    fun listCPIV1(): ResponseEntity<CPIV1Response> {
         return ResponseEntity(service.listCPIV1(), HttpStatus.valueOf(200))
+    }
+
+
+    @RequestMapping(
+        method = [RequestMethod.GET],
+        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listFlows"],
+        produces = ["text/plain"],
+        consumes = ["application/json"]
+    )
+    fun listFlowV1( @Valid @RequestBody getFlowV1Request: GetFlowV1Request): ResponseEntity<FlowStatusV1Responses> {
+        return ResponseEntity(service.listFlowV1(getFlowV1Request), HttpStatus.valueOf(200))
     }
 
 
@@ -170,12 +173,12 @@ class ApiPluginLedgerConnectorCordaController(@Autowired(required = true) val se
 
     @RequestMapping(
         method = [RequestMethod.POST],
-        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}"],
+        value = ["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow"],
         produces = ["application/json"],
         consumes = ["application/json"]
     )
-    fun startFlowV1( @PathVariable("holdingIDShortHash") holdingIDShortHash: kotlin.String, @Valid @RequestBody startFlowV5Request: StartFlowV5Request): ResponseEntity<StartFlowV1Response> {
-        return ResponseEntity(service.startFlowV1(holdingIDShortHash, startFlowV5Request), HttpStatus.valueOf(200))
+    fun startFlowV1( @Valid @RequestBody startFlowV1Request: StartFlowV1Request): ResponseEntity<StartFlowV1Response> {
+        return ResponseEntity(service.startFlowV1(startFlowV1Request), HttpStatus.valueOf(200))
     }
 
 

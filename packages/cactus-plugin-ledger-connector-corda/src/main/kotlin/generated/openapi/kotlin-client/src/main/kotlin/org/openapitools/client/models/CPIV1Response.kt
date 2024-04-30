@@ -15,6 +15,7 @@
 
 package org.openapitools.client.models
 
+import org.openapitools.client.models.CPIV1ResponseCpisInner
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -22,22 +23,14 @@ import com.squareup.moshi.JsonClass
 /**
  * 
  *
- * @param name 
- * @param version 
- * @param signerSummaryHash 
+ * @param cpis 
  */
 
 
-data class CPIIDV5 (
+data class CPIV1Response (
 
-    @Json(name = "name")
-    val name: kotlin.String,
-
-    @Json(name = "version")
-    val version: kotlin.String,
-
-    @Json(name = "signerSummaryHash")
-    val signerSummaryHash: kotlin.String? = null
+    @Json(name = "cpis")
+    val cpis: kotlin.collections.List<CPIV1ResponseCpisInner>? = null
 
 )
 

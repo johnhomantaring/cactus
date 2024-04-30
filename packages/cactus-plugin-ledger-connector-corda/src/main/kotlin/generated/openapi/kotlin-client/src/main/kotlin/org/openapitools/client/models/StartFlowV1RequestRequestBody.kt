@@ -29,7 +29,7 @@ import com.squareup.moshi.JsonClass
  */
 
 
-data class StartFlowV5RequestRequestBody (
+data class StartFlowV1RequestRequestBody (
 
     @Json(name = "chatName")
     val chatName: kotlin.String? = null,

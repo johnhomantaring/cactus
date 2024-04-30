@@ -3,7 +3,6 @@ import {
   IWebServiceEndpoint,
   IExpressRequestHandler,
   IEndpointAuthzOptions,
-  Configuration,
 } from "@hyperledger/cactus-core-api";
 
 import { registerWebServiceEndpoint } from "@hyperledger/cactus-core";
@@ -15,11 +14,6 @@ import {
   LoggerProvider,
   LogLevelDesc,
 } from "@hyperledger/cactus-common";
-
-import {
-  DefaultApi,
-  CPIV5Response,
-} from "../generated/openapi/typescript-axios";
 
 import OAS from "../../json/openapi.json";
 import https from "https";
@@ -97,7 +91,7 @@ export class ListCPIEndpointV1 implements IWebServiceEndpoint {
   }
 
   async handleRequest(req: Request, res: Response): Promise<void> {
-    const fnTag = "GetCPIResponseV1#constructor()";
+    const fnTag = "listCPIV1#handleRequest()";
     const verbUpper = this.getVerbLowerCase().toUpperCase();
     this.log.debug(`${verbUpper} ${this.getPath()}`);
 

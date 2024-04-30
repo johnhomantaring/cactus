@@ -15,22 +15,25 @@
 
 package org.openapitools.client.models
 
-import org.openapitools.client.models.CPIV5ResponseCpisInner
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 /**
- * 
+ * This method starts a new instance for the specified flow for the specified holding identity.
  *
- * @param cpis 
+ * @param holdingIDShortHash 
+ * @param clientRequestId 
  */
 
 
-data class CPIV5Response (
+data class GetFlowV1Request (
 
-    @Json(name = "cpis")
-    val cpis: kotlin.collections.List<CPIV5ResponseCpisInner>? = null
+    @Json(name = "holdingIDShortHash")
+    val holdingIDShortHash: kotlin.String? = null,
+
+    @Json(name = "clientRequestId")
+    val clientRequestId: kotlin.String? = null
 
 )
 

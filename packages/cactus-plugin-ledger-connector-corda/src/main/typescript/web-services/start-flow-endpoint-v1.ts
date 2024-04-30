@@ -4,7 +4,6 @@ import {
   IWebServiceEndpoint,
   IExpressRequestHandler,
   IEndpointAuthzOptions,
-  Configuration,
 } from "@hyperledger/cactus-core-api";
 
 import { registerWebServiceEndpoint } from "@hyperledger/cactus-core";
@@ -15,14 +14,7 @@ import {
   Logger,
   LoggerProvider,
   LogLevelDesc,
-  safeStringifyException,
 } from "@hyperledger/cactus-common";
-
-import {
-  DefaultApi,
-  StartFlowV5Request,
-  FlowStatusV5Response,
-} from "../generated/openapi/typescript-axios";
 
 import OAS from "../../json/openapi.json";
 import { PluginLedgerConnectorCorda } from "../plugin-ledger-connector-corda";
@@ -30,7 +22,6 @@ import { PluginLedgerConnectorCorda } from "../plugin-ledger-connector-corda";
 export interface IStartFlowEndpointV1Options {
   logLevel?: LogLevelDesc;
   apiUrl?: string;
-  holdingIDShortHash: string;
   connector: PluginLedgerConnectorCorda;
 }
 
@@ -66,9 +57,9 @@ export class StartFlowEndpointV1 implements IWebServiceEndpoint {
     };
   }
 
-  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}"] {
+  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow"] {
     return OAS.paths[
-      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}"
+      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow"
     ];
   }
 
@@ -99,14 +90,12 @@ export class StartFlowEndpointV1 implements IWebServiceEndpoint {
     return this;
   }
   async handleRequest(req: Request, res: Response): Promise<void> {
-    const fnTag = "StartFlowV1#handleRequest()";
-    this.log.debug(`POST ${this.getPath()}`);
+    const fnTag = "startFlowV1#handleRequest()";
+    const verbUpper = this.getVerbLowerCase().toUpperCase();
+    this.log.debug(`${verbUpper} ${this.getPath()}`);
     try {
       if (this.apiUrl === undefined) throw "apiUrl option is necessary";
-      const body = await this.options.connector.startFlow(
-        this.options.holdingIDShortHash,
-        req.body,
-      );
+      const body = await this.options.connector.startFlow(req.body);
       res.status(200);
       res.json(body);
     } catch (ex) {

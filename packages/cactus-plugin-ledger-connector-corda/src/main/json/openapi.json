@@ -867,7 +867,7 @@
         "type": "string",
         "nullable": false
       },
-      "CPIV5Response":{
+      "CPIV1Response":{
         "type": "object",
         "required": ["hash", "id", "libraries", "mainBundle", "timestamp", "type"],
         "properties": {
@@ -897,7 +897,7 @@
                         "example": "string"
                       },
                       "id": {
-                        "$ref": "#/components/schemas/CPIIDV5"
+                        "$ref": "#/components/schemas/CPIIDV1"
                       },
                       "libraries": {
                         "type": "array",
@@ -932,7 +932,7 @@
                   "example": "string"
                 },
                 "id": {
-                    "$ref": "#/components/schemas/CPIIDV5"
+                    "$ref": "#/components/schemas/CPIIDV1"
                 },
                 "timestamp": {
                   "type": "string",
@@ -945,11 +945,15 @@
           }
         }
     },
-    "StartFlowV5Request": {
+    "StartFlowV1Request": {
         "description": "This method starts a new instance for the specified flow for the specified holding identity.",
         "type": "object",
         "required": ["clientRequestId", "flowClassName", "requestBody"],
         "properties": {
+          "holdingIDShortHash":{
+            "type": "string",
+            "nullable": false
+          },
           "clientRequestId": {
             "type": "string",
             "nullable": false
@@ -977,7 +981,20 @@
            }
         }
     },
-    "FlowStatusV5Response": {
+    "GetFlowV1Request" : {
+      "description": "This method starts a new instance for the specified flow for the specified holding identity.",
+      "properties": {
+        "holdingIDShortHash":{
+          "type": "string",
+          "nullable": false
+        },
+        "clientRequestId": {
+          "type": "string",
+          "nullable": false
+        }
+         }
+    },
+    "FlowStatusV1Response": {
         "type": "object",
         "required": ["flowStatus", "holdingIDShortHash", "timestamp"],
         "properties": {   
@@ -1017,7 +1034,7 @@
             }
         }
     },
-    "FlowStatusV5Responses": {
+    "FlowStatusV1Responses": {
         "type": "object",
         "required": ["flowStatus", "holdingIDShortHash", "timestamp"],
         "properties": {
@@ -1105,7 +1122,7 @@
           }
       }
   },
-    "CPIIDV5":{
+    "CPIIDV1":{
         "type": "object",
         "required": ["name", "version"],
         "properties": {
@@ -1502,7 +1519,7 @@
                   "content": {
                       "application/json": {
                           "schema": {
-                              "$ref": "#/components/schemas/CPIV5Response"
+                              "$ref": "#/components/schemas/CPIV1Response"
                           }
                       }
                   }
@@ -1510,84 +1527,77 @@
           }
       }
     },
-    "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}": {
+    "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listFlows": {
       "get": {
           "x-hyperledger-cactus": {
               "http": {
                   "verbLowerCase": "get",
-                  "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}"
+                  "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listFlows"
+              }
+          },
+          "operationId": "listFlowV1",
+          "summary": "This method returns an array containing the statuses of all flows running for a specified holding identity. An empty array is returned if there are no flows running.",
+          "parameters": [],
+          "requestBody": {
+            "description": "This method gets the current status of the specified flow instance.",
+            "required": true,
+            "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GetFlowV1Request"
+                  }
+                }
+            }
+          },
+          "responses": {
+              "200": {
+                  "description": "OK",
+                  "content": {
+                      "text/plain": {
+                          "schema": {
+                              "$ref": "#/components/schemas/FlowStatusV1Responses"
+                          }
+                      }
+                  }
+              },
+              "401": {
+                  "description": "Unauthorized" 
+              },
+              "403": {
+                  "description": "Forbidden" 
+              }
+          }
+      }
+    },
+    "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlowCID": {
+      "get": {
+          "x-hyperledger-cactus": {
+              "http": {
+                  "verbLowerCase": "get",
+                  "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlowCID"
               }
           },
           "operationId": "getFlowV1",
-          "summary": "This method returns an array containing the statuses of all flows running for a specified holding identity. An empty array is returned if there are no flows running.",
-          "parameters": [
-              {
-                "name": "holdingIDShortHash",
-                "in": "path",
-                "required": true,
-                "description": "Holding identity short hash",
-                "schema": {
-                  "type": "string"
-                }
-              }
-          ],
-          "responses": {
-              "200": {
-                  "description": "OK",
-                  "content": {
-                      "text/plain": {
-                          "schema": {
-                              "$ref": "#/components/schemas/FlowStatusV5Responses"
-                          }
-                      }
-                  }
-              },
-              "401": {
-                  "description": "Unauthorized" 
-              },
-              "403": {
-                  "description": "Forbidden" 
-              }
-          }
-      }
-    },
-    "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}": {
-      "get": {
-          "x-hyperledger-cactus": {
-              "http": {
-                  "verbLowerCase": "get",
-                  "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/flow/{holdingIDShortHash}/{clientRequestID}"
-              }
-          },
-          "operationId": "flowStatusResponse",
           "summary": "This method gets the current status of the specified flow instance.",
-          "parameters": [
-              {
-                "name": "holdingIDShortHash",
-                "in": "path",
-                "required": true,
-                "description": "Holding identity short hash",
-                "schema": {
-                  "type": "string"
+          "requestBody": {
+            "description": "This method gets the current status of the specified flow instance.",
+            "required": true,
+            "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GetFlowV1Request"
+                  }
                 }
-              },
-              {
-                "name": "clientRequestID",
-                "in": "path",
-                "required": true,
-                "description": "Client request ID",
-                "schema": {
-                  "type": "string"
-                }
-              }
-          ],
+            }
+          },
+          "parameters": [],
           "responses": {
               "200": {
                   "description": "OK",
                   "content": {
                       "text/plain": {
                           "schema": {
-                              "$ref": "#/components/schemas/FlowStatusV5Response"
+                              "$ref": "#/components/schemas/FlowStatusV1Response"
                           }
                       }
                   }
@@ -1601,12 +1611,12 @@
           }
       }
     },
-    "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}": {
+    "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow": {
       "post": {
           "x-hyperledger-cactus": {
               "http": {
                   "verbLowerCase": "post",
-                  "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow/{holdingIDShortHash}"
+                  "path": "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/startFlow"
               }
           },
           "operationId": "startFlowV1",
@@ -1617,22 +1627,12 @@
               "content": {
                   "application/json": {
                     "schema": {
-                      "$ref": "#/components/schemas/StartFlowV5Request"
+                      "$ref": "#/components/schemas/StartFlowV1Request"
                     }
                   }
               }
           },
-          "parameters": [
-              {
-                "name": "holdingIDShortHash",
-                "in": "path",
-                "required": true,
-                "description": "Holding identity short hash",
-                "schema": {
-                  "type": "string"
-                }
-              }
-          ],
+          "parameters": [],
           "responses": {
               "200": {
                   "description": "OK",

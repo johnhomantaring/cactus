@@ -2,7 +2,6 @@ package org.hyperledger.cactus.plugin.ledger.connector.corda.server.model
 
 import java.util.Objects
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.hyperledger.cactus.plugin.ledger.connector.corda.server.model.StartFlowV5RequestRequestBody
 import javax.validation.constraints.DecimalMax
 import javax.validation.constraints.DecimalMin
 import javax.validation.constraints.Email
@@ -15,21 +14,14 @@ import javax.validation.Valid
 
 /**
  * This method starts a new instance for the specified flow for the specified holding identity.
- * @param clientRequestId 
- * @param flowClassName 
- * @param requestBody 
  * @param holdingIDShortHash 
+ * @param clientRequestId 
  */
-data class StartFlowV5Request(
+data class GetFlowV1Request(
 
-    @get:JsonProperty("clientRequestId", required = true) val clientRequestId: kotlin.String,
+    @get:JsonProperty("holdingIDShortHash") val holdingIDShortHash: kotlin.String? = null,
 
-    @get:JsonProperty("flowClassName", required = true) val flowClassName: kotlin.String,
-
-    @field:Valid
-    @get:JsonProperty("requestBody", required = true) val requestBody: StartFlowV5RequestRequestBody,
-
-    @get:JsonProperty("holdingIDShortHash") val holdingIDShortHash: kotlin.String? = null
+    @get:JsonProperty("clientRequestId") val clientRequestId: kotlin.String? = null
 ) {
 
 }

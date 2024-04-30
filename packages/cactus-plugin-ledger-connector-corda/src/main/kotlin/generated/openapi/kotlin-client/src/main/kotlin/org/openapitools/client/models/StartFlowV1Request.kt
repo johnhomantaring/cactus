@@ -15,7 +15,7 @@
 
 package org.openapitools.client.models
 
-import org.openapitools.client.models.StartFlowV5RequestRequestBody
+import org.openapitools.client.models.StartFlowV1RequestRequestBody
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -26,10 +26,11 @@ import com.squareup.moshi.JsonClass
  * @param clientRequestId 
  * @param flowClassName 
  * @param requestBody 
+ * @param holdingIDShortHash 
  */
 
 
-data class StartFlowV5Request (
+data class StartFlowV1Request (
 
     @Json(name = "clientRequestId")
     val clientRequestId: kotlin.String,
@@ -38,7 +39,10 @@ data class StartFlowV5Request (
     val flowClassName: kotlin.String,
 
     @Json(name = "requestBody")
-    val requestBody: StartFlowV5RequestRequestBody
+    val requestBody: StartFlowV1RequestRequestBody,
+
+    @Json(name = "holdingIDShortHash")
+    val holdingIDShortHash: kotlin.String? = null
 
 )
 

@@ -15,7 +15,7 @@
 
 package org.openapitools.client.models
 
-import org.openapitools.client.models.CPIIDV5
+import org.openapitools.client.models.CPIIDV1
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -32,13 +32,13 @@ import com.squareup.moshi.JsonClass
  */
 
 
-data class CPIV5ResponseCpisInnerCpksInner (
+data class CPIV1ResponseCpisInnerCpksInner (
 
     @Json(name = "hash")
     val hash: kotlin.String? = null,
 
     @Json(name = "id")
-    val id: CPIIDV5? = null,
+    val id: CPIIDV1? = null,
 
     @Json(name = "libraries")
     val libraries: kotlin.collections.List<kotlin.String>? = null,

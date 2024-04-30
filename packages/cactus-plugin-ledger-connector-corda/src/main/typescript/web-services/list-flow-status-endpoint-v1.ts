@@ -4,7 +4,6 @@ import {
   IWebServiceEndpoint,
   IExpressRequestHandler,
   IEndpointAuthzOptions,
-  Configuration,
 } from "@hyperledger/cactus-core-api";
 
 import { registerWebServiceEndpoint } from "@hyperledger/cactus-core";
@@ -15,14 +14,9 @@ import {
   Logger,
   LoggerProvider,
   LogLevelDesc,
-  safeStringifyException,
 } from "@hyperledger/cactus-common";
 
-import {
-  DefaultApi,
-  StartFlowV5Request,
-  FlowStatusV5Response,
-} from "../generated/openapi/typescript-axios";
+// import {} from "../generated/openapi/typescript-axios";
 
 import OAS from "../../json/openapi.json";
 import { PluginLedgerConnectorCorda } from "../plugin-ledger-connector-corda";
@@ -66,9 +60,9 @@ export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
     };
   }
 
-  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}"] {
+  public get oasPath(): (typeof OAS.paths)["/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listFlows"] {
     return OAS.paths[
-      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/getFlow/{holdingIDShortHash}"
+      "/api/v1/plugins/@hyperledger/cactus-plugin-ledger-connector-corda/listFlows"
     ];
   }
 
@@ -99,14 +93,13 @@ export class FlowStatusEndpointV1 implements IWebServiceEndpoint {
     return this;
   }
   async handleRequest(req: Request, res: Response): Promise<void> {
-    const fnTag = "FlowStatusEndpointV1#handleRequest()";
-    this.log.debug(`POST ${this.getPath()}`);
+    const fnTag = "listFlowV1#handleRequest()";
+    const verbUpper = this.getVerbLowerCase().toUpperCase();
+    this.log.debug(`${verbUpper} ${this.getPath()}`);
     try {
       if (this.apiUrl === undefined) throw "apiUrl option is necessary";
-      const body = await this.options.connector.startFlow(
-        this.options.holdingIDShortHash,
-        req.body,
-      );
+      console.log(req.body);
+      const body = await this.options.connector.listFlows(req.body);
       res.status(200);
       res.json(body);
     } catch (ex) {
