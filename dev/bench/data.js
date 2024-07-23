@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720772491394,
+  "lastUpdate": 1721704901648,
   "repoUrl": "https://github.com/johnhomantaring/cactus",
   "entries": {
     "Benchmark": [
@@ -107,6 +107,44 @@ window.BENCHMARK_DATA = {
             "range": "±1.45%",
             "unit": "ops/sec",
             "extra": "180 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "petermetz@users.noreply.github.com",
+            "name": "Peter Somogyvari",
+            "username": "petermetz"
+          },
+          "distinct": true,
+          "id": "603ff0ea5b6243d8f1adf43e264d0524fa31c454",
+          "message": "build: bump curve25519-dalek\n\nBumps the cargo group with 1 update in the\n/packages/cacti-plugin-ledger-connector-stellar/src/test/rust/demo-contract\ndirectory: [curve25519-dalek](https://github.com/dalek-cryptography/curve25519-dalek).\n\nUpdates `curve25519-dalek` from 4.1.1 to 4.1.2\n- [Release notes](https://github.com/dalek-cryptography/curve25519-dalek/releases)\n- Commits:\nhttps://github.com/dalek-cryptography/curve25519-dalek/compare/curve25519-4.1.1...curve25519-4.1.2\n\n---\nupdated-dependencies:\n- dependency-name: curve25519-dalek\n  dependency-type: indirect\n  dependency-group: cargo\n...\n\nCo-authored-by: Peter Somogyvari <peter.somogyvari@accenture.com>\n\nSigned-off-by: dependabot[bot] <support@github.com>\nSigned-off-by: Peter Somogyvari <peter.somogyvari@accenture.com>",
+          "timestamp": "2024-07-19T14:21:03-07:00",
+          "tree_id": "3b2280f1255fb5e886c8672b7dc9d151ae16d54e",
+          "url": "https://github.com/johnhomantaring/cactus/commit/603ff0ea5b6243d8f1adf43e264d0524fa31c454"
+        },
+        "date": 1721704899385,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "cmd-api-server_HTTP_GET_getOpenApiSpecV1",
+            "value": 575,
+            "range": "±1.54%",
+            "unit": "ops/sec",
+            "extra": "178 samples"
+          },
+          {
+            "name": "cmd-api-server_gRPC_GetOpenApiSpecV1",
+            "value": 357,
+            "range": "±1.44%",
+            "unit": "ops/sec",
+            "extra": "181 samples"
           }
         ]
       }
