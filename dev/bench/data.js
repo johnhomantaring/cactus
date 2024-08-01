@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721705673676,
+  "lastUpdate": 1722495958797,
   "repoUrl": "https://github.com/johnhomantaring/cactus",
   "entries": {
     "Benchmark": [
@@ -176,6 +176,44 @@ window.BENCHMARK_DATA = {
             "range": "±2.99%",
             "unit": "ops/sec",
             "extra": "180 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "petermetz@users.noreply.github.com",
+            "name": "Peter Somogyvari",
+            "username": "petermetz"
+          },
+          "distinct": true,
+          "id": "9698f79e1eff7375e8270f2f8584a2cc75491568",
+          "message": "build: bump time\n\nBumps [time](https://github.com/time-rs/time) from 0.3.31 to 0.3.36.\n- [Release notes](https://github.com/time-rs/time/releases)\n- [Changelog](https://github.com/time-rs/time/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/time-rs/time/compare/v0.3.31...v0.3.36)\n\n---\nupdated-dependencies:\n- dependency-name: time\n  dependency-type: indirect\n...\n\nCo-authored-by: Peter Somogyvari <peter.somogyvari@accenture.com>\n\nSigned-off-by: dependabot[bot] <support@github.com>\nSigned-off-by: Peter Somogyvari <peter.somogyvari@accenture.com>",
+          "timestamp": "2024-07-31T16:20:56-07:00",
+          "tree_id": "5c549184e1268dd945dae2ad11bec61c6182df3d",
+          "url": "https://github.com/johnhomantaring/cactus/commit/9698f79e1eff7375e8270f2f8584a2cc75491568"
+        },
+        "date": 1722495956302,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "cmd-api-server_HTTP_GET_getOpenApiSpecV1",
+            "value": 591,
+            "range": "±1.67%",
+            "unit": "ops/sec",
+            "extra": "177 samples"
+          },
+          {
+            "name": "cmd-api-server_gRPC_GetOpenApiSpecV1",
+            "value": 356,
+            "range": "±1.42%",
+            "unit": "ops/sec",
+            "extra": "179 samples"
           }
         ]
       }
