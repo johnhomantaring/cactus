@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723395732740,
+  "lastUpdate": 1723396777069,
   "repoUrl": "https://github.com/johnhomantaring/cactus",
   "entries": {
     "Benchmark": [
@@ -252,6 +252,37 @@ window.BENCHMARK_DATA = {
             "range": "±1.93%",
             "unit": "ops/sec",
             "extra": "181 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "peter.somogyvari@accenture.com",
+            "name": "Peter Somogyvari",
+            "username": "petermetz"
+          },
+          "committer": {
+            "email": "sandeepn.official@gmail.com",
+            "name": "Sandeep Nishad",
+            "username": "sandeepnRES"
+          },
+          "distinct": true,
+          "id": "d0e4539a9b106fa684cd34a6cdb1ff835b870ce4",
+          "message": "ci(github): upgrade actions/github-script to 7.0.1 project-wide\n\nFixes #3458\n\nSigned-off-by: Peter Somogyvari <peter.somogyvari@accenture.com>",
+          "timestamp": "2024-08-09T05:57:27+05:30",
+          "tree_id": "1b12638b0ee30d8845ca2446fe5a82b172922a85",
+          "url": "https://github.com/johnhomantaring/cactus/commit/d0e4539a9b106fa684cd34a6cdb1ff835b870ce4"
+        },
+        "date": 1723396775402,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "plugin-ledger-connector-besu_HTTP_GET_getOpenApiSpecV1",
+            "value": 727,
+            "range": "±2.73%",
+            "unit": "ops/sec",
+            "extra": "180 samples"
           }
         ]
       }
