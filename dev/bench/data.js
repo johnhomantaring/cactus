@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723396777069,
+  "lastUpdate": 1724123909223,
   "repoUrl": "https://github.com/johnhomantaring/cactus",
   "entries": {
     "Benchmark": [
@@ -281,6 +281,37 @@ window.BENCHMARK_DATA = {
             "name": "plugin-ledger-connector-besu_HTTP_GET_getOpenApiSpecV1",
             "value": 727,
             "range": "±2.73%",
+            "unit": "ops/sec",
+            "extra": "180 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "adrian.batuto@accenture.com",
+            "name": "adrianbatuto",
+            "username": "adrianbatuto"
+          },
+          "committer": {
+            "email": "petermetz@users.noreply.github.com",
+            "name": "Peter Somogyvari",
+            "username": "petermetz"
+          },
+          "distinct": true,
+          "id": "ec9683d38670fe5d657b602db8215e602fd4209d",
+          "message": "feat(corda): support 5.1 via TS/HTTP (no JVM)\nFixes #2978\nFixes #3293\n\nSigned-off-by: adrianbatuto <adrian.batuto@accenture.com>",
+          "timestamp": "2024-08-19T14:43:10-07:00",
+          "tree_id": "530c66f1928ba9481fcc2d1d760582bf58be6677",
+          "url": "https://github.com/johnhomantaring/cactus/commit/ec9683d38670fe5d657b602db8215e602fd4209d"
+        },
+        "date": 1724123906927,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "plugin-ledger-connector-besu_HTTP_GET_getOpenApiSpecV1",
+            "value": 741,
+            "range": "±3.20%",
             "unit": "ops/sec",
             "extra": "180 samples"
           }
